@@ -1,4 +1,9 @@
+import app from "./app";
+import { PORT } from "./config";
+// import connectToMongoDB from "./db";
 
+(async () => {
+	// await connectToMongoDB();
 
-
-const a =1
+	await app.listen(PORT);
+})();
