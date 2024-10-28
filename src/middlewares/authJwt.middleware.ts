@@ -15,7 +15,10 @@ export const verifyToken = async (
 
 	const token = tokenArr instanceof Array ? tokenArr[0] : tokenArr;
 
-	if (!token) return res.status(403).json({ message: "No token provided" });
+	if (!token) {
+		res.status(403).json({ message: "No token provided" });
+		return;
+	}
 
 	try {
 		req.user = userByJWT(token);
@@ -24,7 +27,7 @@ export const verifyToken = async (
 		// if (!user) return res.status(404).json({ message: "No user found" });
 		return next();
 	} catch (error) {
-		return res.status(401).json({ message: "Unauthorized!" });
+		res.status(401).json({ message: "Unauthorized!" });
 	}
 };
 

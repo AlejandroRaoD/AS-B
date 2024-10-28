@@ -4,7 +4,7 @@ import userRoutes from "./user.routes";
 
 const allRouters = Router();
 
-allRouters.use(defaultRoutes);
 allRouters.use(userRoutes);
+allRouters.use(defaultRoutes);
 
 export default allRouters;

@@ -12,7 +12,7 @@ const connectToMongoDB = async () => {
 		console.log("Conectado a MongoDB");
 	} catch (error) {
 		console.log("No se pudo conectar a MongoDB");
-		console.log(`El error de conexión es: ${error}`);
+		console.log(error);
 		await new Promise((resolve) => setTimeout(resolve, 5000));
 		await connectToMongoDB();
 	}
