@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import userByJWT from "../helpers/userByJWT";
-import { get_User_service } from "../services/user.service";
-import { UserPermissions } from "../config/enums";
+import { get_User_service } from "../user.service";
+import { UserPermissions } from "../../config/enums";
 
 // import User from "../models/User.js";
 // import Role from "../models/Role.js";

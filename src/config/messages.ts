@@ -12,6 +12,27 @@ export const ErrorsMessages = {
 		whenObtaining: "error when obtaining",
 
 		update: "update failed",
-		delete:"delete fail"
+		delete: "delete fail",
 	},
+
+	sede: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	
+	employee: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	
 };

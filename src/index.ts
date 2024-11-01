@@ -1,6 +1,6 @@
 import app from "./app";
 import { PORT } from "./config";
-import connectToMongoDB from "./db";
+import connectToMongoDB from "./common/db";
 
 (async () => {
 	await connectToMongoDB();

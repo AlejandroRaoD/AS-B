@@ -1,7 +1,7 @@
 export enum Gender {
-	Masculine = "M",
-	Feminine = "F",
-	Other = "Other",
+	Masculine = "m",
+	Feminine = "f",
+	Other = "other",
 }
 
 export enum BusinessPosition {

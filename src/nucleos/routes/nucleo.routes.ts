@@ -5,7 +5,7 @@ import {
 	getNucleos_controller,
 	getOneNucleo_controller,
 	updateNucleo_controller,
-} from "../controllers/nucleo.controller";
+} from "../nucleo.controller";
 
 const router = express.Router();
 

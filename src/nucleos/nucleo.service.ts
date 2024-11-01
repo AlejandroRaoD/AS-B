@@ -2,7 +2,7 @@ import { ErrorsMessages } from "../config/messages";
 import nucleoModel, {
 	nucleo_from_DB,
 	nucleoAttributes,
-} from "../models/nucleo.model";
+} from "./models/nucleo.model";
 
 // ****************************************************************************
 // 										             creacion

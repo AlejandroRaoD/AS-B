@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BusinessPosition, Gender } from "../config/enums";
+import { BusinessPosition, Gender } from "../../config/enums";
 
 export interface employeeAttributes {
 	_id: string;
@@ -25,10 +25,10 @@ const EmployeeSchema = new mongoose.Schema({
 	birthday: { type: Date, require: true },
 	CI: { type: String, trim: true, require: true, unique: true },
 	email: { type: String, trim: true, require: true, unique: true },
-	gender: { type: Gender, enum: Gender },
+	gender: { type: String, enum: Gender },
 	address: { type: String, trim: true, require: true },
 	phone_number: [String],
-	businessPosition: { type: BusinessPosition, require: true },
+	businessPosition: { type: String, enum: BusinessPosition, require: true },
 	sedeId: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Sede",

@@ -5,7 +5,7 @@ import { SECRET_WORD } from "../config";
 import {
 	get_User_by_email_service,
 	get_profile_User_service,
-} from "../services/user.service";
+} from "./user.service";
 import { ErrorsMessages } from "../config/messages";
 
 export const signin_user_controller = async (req: Request, res: Response) => {

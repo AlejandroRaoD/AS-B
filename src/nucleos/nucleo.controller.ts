@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { ErrorsMessages } from "../config/messages";
-import getNucleoDataOfRequest from "../helpers/getNucleoData.helper";
+import getNucleoDataOfRequest from "./helpers/getNucleoData.helper";
 import {
 	createNucleo_service,
 	deleteNucleo_service,
 	getNucleos_service,
 	getOneNucleo_service,
 	updateNucleo_service,
-} from "../services/nucleo.service";
+} from "./nucleo.service";
 
 export const createNucleo_controller = async (req: Request, res: Response) => {
 	const data = getNucleoDataOfRequest(req.body);

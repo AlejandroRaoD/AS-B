@@ -3,8 +3,8 @@
 // ****************************************************************************
 
 import { ErrorsMessages } from "../config/messages";
-import { employeeAttributes } from "../models/employee.model";
-import userModel, { UserAttributes, User_from_DB } from "../models/user.model";
+import { employeeAttributes } from "../employee/models/employee.model";
+import userModel, { UserAttributes, User_from_DB } from "./models/user.model";
 
 export const createUser_service = async (
 	data: UserAttributes
