@@ -51,8 +51,12 @@ export const updateNucleo_service = async (
 	_id: string,
 	data: nucleoAttributes
 ): Promise<nucleo_from_DB> => {
+	const { name } = data;
+
 	try {
-		const nucleo = await nucleoModel.findOneAndUpdate({ _id }, data);
+		const nucleo = await nucleoModel.findById(_id);
+
+		nucleo.name = name;
 
 		return nucleo;
 	} catch (error) {
@@ -63,7 +67,9 @@ export const updateNucleo_service = async (
 
 export const deleteNucleo_service = async (_id: string): Promise<void> => {
 	try {
-		await nucleoModel.deleteOne({ _id });
+		const result = await nucleoModel.deleteOne({ _id });
+
+		if (!result.deletedCount) throw new Error(ErrorsMessages.nucleo.notFound);
 	} catch (error) {
 		console.log(error);
 		throw new Error(ErrorsMessages.nucleo.whenObtaining);

@@ -79,6 +79,7 @@ export const deleteNucleo_controller = async (req: Request, res: Response) => {
 		res.json({ ok: true });
 	} catch (error) {
 		console.log(error);
+
 		res
 			.status(500)
 			.json({ error: true, message: ErrorsMessages.nucleo.delete });

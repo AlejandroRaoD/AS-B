@@ -5,8 +5,8 @@ import nucleoRoutes from "./nucleo.routes";
 
 const allRouters = Router();
 
-allRouters.use("nucleo", nucleoRoutes);
-allRouters.use("user", userRoutes);
+allRouters.use("/api/nucleo", nucleoRoutes);
+allRouters.use("/api/user", userRoutes);
 allRouters.use(defaultRoutes);
 
 export default allRouters;
