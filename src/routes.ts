@@ -8,7 +8,9 @@ import programaRoutes from "./programas/routes/programa.routes";
 import catedraRoutes from "./programas/catedras/routes/catedra.routes";
 import fiamRoutes from "./employee/fiam/routes/fiam.routes";
 import studentRoutes from "./student/routes/student.routes";
+import representativeRoutes from "./representative/routes/representative.routes";
 import furnitureRoutes from "./furniture/routes/furniture.routes";
+import instrumentRoutes from "./instrument/routes/instrument.routes";
 
 const allRouters = Router();
 
@@ -21,7 +23,9 @@ allRouters.use("/api/programa", programaRoutes);
 allRouters.use("/api/catedra", catedraRoutes);
 allRouters.use("/api/fiam", fiamRoutes);
 allRouters.use("/api/student", studentRoutes);
+allRouters.use("/api/representative", representativeRoutes);
 allRouters.use("/api/furniture", furnitureRoutes);
+allRouters.use("/api/instrument", instrumentRoutes);
 
 allRouters.use(defaultRoutes);
 

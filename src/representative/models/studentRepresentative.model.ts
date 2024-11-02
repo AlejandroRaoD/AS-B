@@ -4,6 +4,7 @@ export interface studentRepresentativeAttributes {
 	_id: string;
 	representativeId: string;
 	studentId: string;
+	familyBond: String;
 }
 
 export interface studentRepresentative_from_DB
@@ -22,6 +23,7 @@ const StudentRepresentativeSchema = new mongoose.Schema({
 		ref: "Student",
 		require: true,
 	},
+	familyBond: { type: String, require: true },
 });
 
 export default mongoose.model<studentRepresentative_from_DB>(

@@ -28,7 +28,7 @@ const InstrumentSchema = new mongoose.Schema({
 	brand: { type: String, trim: true, default: "" },
 	model: { type: String, trim: true, default: "" },
 	status: {
-		type: InstrumentStatus,
+		type: String,
 		enum: InstrumentStatus,
 		default: InstrumentStatus.active,
 	},

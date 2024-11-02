@@ -68,7 +68,34 @@ export const ErrorsMessages = {
 		delete: "delete fail",
 	},
 
+	representative: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	studentRepresentative: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
 	furniture: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	instrument: {
 		notCreated: "notCreated",
 		notFound: "sede not found",
 		whenObtaining: "error when obtaining",

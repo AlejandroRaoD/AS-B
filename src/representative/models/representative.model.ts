@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Gender } from "../config/enums";
+import { Gender } from "../../config/enums";
 
 export interface representativeAttributes {
 	_id: string;
@@ -12,7 +12,6 @@ export interface representativeAttributes {
 	address: string;
 	phone_number: string[];
 	job: string;
-	familyBond: String;
 }
 
 export interface representative_from_DB
@@ -25,11 +24,10 @@ const RepresentativeSchema = new mongoose.Schema({
 	birthday: { type: Date, require: true },
 	CI: { type: String, trim: true, require: true, unique: true },
 	email: { type: String, trim: true, require: true, unique: true },
-	gender: { type: Gender, enum: Gender },
+	gender: { type: String, enum: Gender },
 	address: { type: String, trim: true, require: true },
 	phone_number: [String],
 	job: { type: String, require: true },
-	familyBond: { type: String, require: true },
 });
 
 export default mongoose.model<representative_from_DB>(
