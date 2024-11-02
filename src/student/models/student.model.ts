@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Gender } from "../config/enums";
+import { Gender } from "../../config/enums";
 
 export interface studentAttributes {
 	_id: string;
@@ -24,7 +24,7 @@ const StudentSchema = new mongoose.Schema({
 	birthday: { type: Date, require: true },
 	CI: { type: String, trim: true },
 	email: { type: String, trim: true, require: true, unique: true },
-	gender: { type: Gender, enum: Gender },
+	gender: { type: String, enum: Gender },
 	address: { type: String, trim: true, require: true },
 	phone_number: [String],
 	hasInstrument: { type: Boolean, default: false },

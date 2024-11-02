@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export enum FiamTypes {
 	A = "A",
+	B = "B",
 }
 
 export interface fiamAttributes {
@@ -26,7 +27,7 @@ const FiamSchema = new mongoose.Schema({
 		require: true,
 	},
 
-	type: { type: FiamTypes, enum: FiamTypes, require: true },
+	type: { type: String, enum: FiamTypes, require: true },
 });
 
 export default mongoose.model<fiam_from_DB>("Fiam", FiamSchema);

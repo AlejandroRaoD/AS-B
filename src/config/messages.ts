@@ -24,7 +24,6 @@ export const ErrorsMessages = {
 		delete: "delete fail",
 	},
 
-	
 	employee: {
 		notCreated: "notCreated",
 		notFound: "sede not found",
@@ -33,7 +32,7 @@ export const ErrorsMessages = {
 		update: "update failed",
 		delete: "delete fail",
 	},
-		
+
 	programa: {
 		notCreated: "notCreated",
 		notFound: "sede not found",
@@ -50,5 +49,31 @@ export const ErrorsMessages = {
 		update: "update failed",
 		delete: "delete fail",
 	},
-	
+
+	fiam: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	student: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	furniture: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
 };

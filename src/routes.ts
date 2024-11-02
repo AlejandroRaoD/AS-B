@@ -6,6 +6,9 @@ import nucleoRoutes from "./nucleos/routes/nucleo.routes";
 import sedeRoutes from "./nucleos/sedes/routes/sede.routes";
 import programaRoutes from "./programas/routes/programa.routes";
 import catedraRoutes from "./programas/catedras/routes/catedra.routes";
+import fiamRoutes from "./employee/fiam/routes/fiam.routes";
+import studentRoutes from "./student/routes/student.routes";
+import furnitureRoutes from "./furniture/routes/furniture.routes";
 
 const allRouters = Router();
 
@@ -16,6 +19,10 @@ allRouters.use("/api/nucleo", nucleoRoutes);
 allRouters.use("/api/sede", sedeRoutes);
 allRouters.use("/api/programa", programaRoutes);
 allRouters.use("/api/catedra", catedraRoutes);
+allRouters.use("/api/fiam", fiamRoutes);
+allRouters.use("/api/student", studentRoutes);
+allRouters.use("/api/furniture", furnitureRoutes);
+
 allRouters.use(defaultRoutes);
 
 export default allRouters;

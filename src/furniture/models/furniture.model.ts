@@ -7,6 +7,7 @@ export enum FurnitureStatus {
 export interface furnitureAttributes {
 	_id: string;
 	name: string;
+	quantity: number;
 	description: string;
 	serialNumber: string;
 	brand: string;
@@ -24,12 +25,12 @@ export interface furniture_from_DB
 const FurnitureSchema = new mongoose.Schema({
 	name: { type: String, trim: true, require: true },
 	description: { type: String, trim: true, default: "" },
-
+	quantity: { type: Number, default: 1 },
 	serialNumber: { type: String, trim: true, default: "" },
 	brand: { type: String, trim: true, default: "" },
 	model: { type: String, trim: true, default: "" },
 	status: {
-		type: FurnitureStatus,
+		type: String,
 		enum: FurnitureStatus,
 		default: FurnitureStatus.active,
 	},
