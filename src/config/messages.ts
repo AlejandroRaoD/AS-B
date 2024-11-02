@@ -33,6 +33,22 @@ export const ErrorsMessages = {
 		update: "update failed",
 		delete: "delete fail",
 	},
+		
+	programa: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
 
+		update: "update failed",
+		delete: "delete fail",
+	},
+	catedra: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
 	
 };
