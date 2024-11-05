@@ -112,4 +112,22 @@ export const ErrorsMessages = {
 		update: "update failed",
 		delete: "delete fail",
 	},
+
+	enrollmentPeriod: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
+
+	studentEnrollment: {
+		notCreated: "notCreated",
+		notFound: "sede not found",
+		whenObtaining: "error when obtaining",
+
+		update: "update failed",
+		delete: "delete fail",
+	},
 };

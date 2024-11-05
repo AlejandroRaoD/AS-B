@@ -12,12 +12,13 @@ import representativeRoutes from "./representative/routes/representative.routes"
 import furnitureRoutes from "./furniture/routes/furniture.routes";
 import instrumentRoutes from "./instrument/routes/instrument.routes";
 import comodatoRoutes from "./comodato/routes/comodato.routes";
+import enrollmentPeriodRoutes from "./enrollmentPeriod/routes/enrollmentPeriod.routes";
+import studentEnrollmentRoutes from "./studentEnrollment/routes/studentEnrollment.routes";
 
 const allRouters = Router();
 
 allRouters.use("/api/user", userRoutes);
 allRouters.use("/api/employee", employeeRoutes);
-
 allRouters.use("/api/nucleo", nucleoRoutes);
 allRouters.use("/api/sede", sedeRoutes);
 allRouters.use("/api/programa", programaRoutes);
@@ -28,6 +29,8 @@ allRouters.use("/api/representative", representativeRoutes);
 allRouters.use("/api/furniture", furnitureRoutes);
 allRouters.use("/api/instrument", instrumentRoutes);
 allRouters.use("/api/comodato", comodatoRoutes);
+allRouters.use("/api/enrollment_period", enrollmentPeriodRoutes);
+allRouters.use("/api/student_enrollment", studentEnrollmentRoutes);
 
 allRouters.use(defaultRoutes);
 
