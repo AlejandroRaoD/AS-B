@@ -11,6 +11,7 @@ import studentRoutes from "./student/routes/student.routes";
 import representativeRoutes from "./representative/routes/representative.routes";
 import furnitureRoutes from "./furniture/routes/furniture.routes";
 import instrumentRoutes from "./instrument/routes/instrument.routes";
+import comodatoRoutes from "./comodato/routes/comodato.routes";
 
 const allRouters = Router();
 
@@ -26,6 +27,7 @@ allRouters.use("/api/student", studentRoutes);
 allRouters.use("/api/representative", representativeRoutes);
 allRouters.use("/api/furniture", furnitureRoutes);
 allRouters.use("/api/instrument", instrumentRoutes);
+allRouters.use("/api/comodato", comodatoRoutes);
 
 allRouters.use(defaultRoutes);
 

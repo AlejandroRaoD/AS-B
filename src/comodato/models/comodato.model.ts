@@ -7,6 +7,7 @@ export enum ComodatoStatus {
 export interface ComodatoAttributes {
 	_id: string;
 	instrumentId: string;
+	studentId: string;
 	status: ComodatoStatus;
 	initDate: Date;
 	endDate: Date;
@@ -23,7 +24,14 @@ const ComodatoSchema = new mongoose.Schema({
 		ref: "Instrument",
 		require: true,
 	},
-	status: { type: ComodatoStatus, default: ComodatoStatus.active },
+
+	studentId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Student",
+		require: true,
+	},
+
+	status: { type: String, default: ComodatoStatus.active },
 	initDate: { type: Date, default: new Date() },
 	endDate: { type: Date },
 	contractNumber: { type: Number, require: true, unique: true },
