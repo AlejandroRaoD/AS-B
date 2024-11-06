@@ -1,8 +1,9 @@
 import { isValidObjectId } from "mongoose";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorsMessages, moduleItems } from "../config/messages";
 import nucleoModel, {
 	nucleo_from_DB,
 	nucleoAttributes,
+	nucleoStatus,
 } from "./models/nucleo.model";
 import { ErrorWithHttpStatus } from "../common/classes/ErrorWithHttpStatus";
 
@@ -16,8 +17,12 @@ export const createNucleo_service = async (
 	const { name } = data;
 
 	const exist = await getOneNucleo_service(name);
+
 	if (exist)
-		throw new ErrorWithHttpStatus(400, ErrorsMessages.nucleo.alreadyExist);
+		throw new ErrorWithHttpStatus(
+			400,
+			ErrorsMessages.alreadyExist(moduleItems.nucleo)
+		);
 
 	const nucleo = new nucleoModel(data);
 
@@ -53,7 +58,7 @@ export const getOneNucleo_service = async (
 };
 
 export const updateNucleo_service = async (
-	_id: string,
+	id: string,
 	data: nucleoAttributes
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
@@ -61,9 +66,12 @@ export const updateNucleo_service = async (
 	const exist = await getOneNucleo_service(name);
 
 	if (exist)
-		throw new ErrorWithHttpStatus(403, ErrorsMessages.nucleo.alreadyExist);
+		throw new ErrorWithHttpStatus(
+			400,
+			ErrorsMessages.alreadyExist(moduleItems.nucleo)
+		);
 
-	const nucleo = await nucleoModel.findById(_id);
+	const nucleo = await nucleoModel.findById(id);
 
 	nucleo.name = name;
 
@@ -72,13 +80,20 @@ export const updateNucleo_service = async (
 	return nucleo;
 };
 
-export const deleteNucleo_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await nucleoModel.deleteOne({ _id });
+export const deleteNucleo_service = async (
+	_id: string
+): Promise<nucleo_from_DB> => {
+	const nucleo = await getOneNucleo_service(_id);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.nucleo.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.nucleo.whenObtaining);
-	}
+	if (!nucleo)
+		throw new ErrorWithHttpStatus(
+			404,
+			ErrorsMessages.notFound(moduleItems.nucleo)
+		);
+
+	nucleo.status = nucleoStatus.delete;
+
+	await nucleo.save();
+
+	return nucleo;
 };

@@ -8,6 +8,7 @@ import {
 } from "./studentEnrollment.service";
 import getStudentEnrollmentDataOfRequest from "./helpers/getStudentEnrollmentData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createStudentEnrollment_controller = async (
 	req: Request,
@@ -20,14 +21,14 @@ export const createStudentEnrollment_controller = async (
 
 		res.status(201).json({ data: studentEnrollment });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getStudentEnrollments_controller = async (_req: Request, res: Response) => {
+export const getStudentEnrollments_controller = async (
+	_req: Request,
+	res: Response
+) => {
 	// const query = req.query
 
 	try {
@@ -35,10 +36,7 @@ export const getStudentEnrollments_controller = async (_req: Request, res: Respo
 
 		res.status(200).json({ data: studentEnrollments });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +51,7 @@ export const getOneStudentEnrollment_controller = async (
 
 		res.status(200).json({ data: studentEnrollment });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 

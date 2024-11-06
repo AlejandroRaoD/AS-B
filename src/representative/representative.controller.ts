@@ -8,6 +8,7 @@ import {
 } from "./representative.service";
 import getRepresentativeDataOfRequest from "./helpers/getRepresentativeData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createRepresentative_controller = async (
 	req: Request,
@@ -20,14 +21,14 @@ export const createRepresentative_controller = async (
 
 		res.status(201).json({ data: representative });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getRepresentatives_controller = async (_req: Request, res: Response) => {
+export const getRepresentatives_controller = async (
+	_req: Request,
+	res: Response
+) => {
 	// const query = req.query
 
 	try {
@@ -35,10 +36,7 @@ export const getRepresentatives_controller = async (_req: Request, res: Response
 
 		res.status(200).json({ data: representatives });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +51,7 @@ export const getOneRepresentative_controller = async (
 
 		res.status(200).json({ data: representative });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 

@@ -8,6 +8,7 @@ import {
 	updateSede_service,
 } from "./sede.service";
 import getSedeDataOfRequest from "./helpers/getSedeData.helper";
+import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
 
 export const createSede_controller = async (req: Request, res: Response) => {
 	const data = getSedeDataOfRequest(req.body);
@@ -17,10 +18,7 @@ export const createSede_controller = async (req: Request, res: Response) => {
 
 		res.status(201).json({ data: sede });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -32,10 +30,7 @@ export const getSedes_controller = async (_req: Request, res: Response) => {
 
 		res.status(200).json({ data: sedes });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -47,10 +42,7 @@ export const getOneSede_controller = async (req: Request, res: Response) => {
 
 		res.status(200).json({ data: sede });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -64,9 +56,7 @@ export const updateSede_controller = async (req: Request, res: Response) => {
 		res.json({ data: sede });
 	} catch (error) {
 		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.sede.update });
+		res.status(500).json({ error: true, message: ErrorsMessages.sede.update });
 	}
 };
 
@@ -80,8 +70,6 @@ export const deleteSede_controller = async (req: Request, res: Response) => {
 	} catch (error) {
 		console.log(error);
 
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.sede.delete });
+		res.status(500).json({ error: true, message: ErrorsMessages.sede.delete });
 	}
 };

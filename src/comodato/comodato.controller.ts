@@ -8,6 +8,7 @@ import {
 } from "./comodato.service";
 import getComodatoDataOfRequest from "./helpers/getComodatoData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createComodato_controller = async (
 	req: Request,
@@ -20,10 +21,7 @@ export const createComodato_controller = async (
 
 		res.status(201).json({ data: comodato });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -35,10 +33,7 @@ export const getComodatos_controller = async (_req: Request, res: Response) => {
 
 		res.status(200).json({ data: comodatos });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +48,7 @@ export const getOneComodato_controller = async (
 
 		res.status(200).json({ data: comodato });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 

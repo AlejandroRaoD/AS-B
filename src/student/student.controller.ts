@@ -8,11 +8,9 @@ import {
 } from "./student.service";
 import getStudentDataOfRequest from "./helpers/getStudentData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
-export const createStudent_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const createStudent_controller = async (req: Request, res: Response) => {
 	const data = getStudentDataOfRequest(req.body);
 
 	try {
@@ -20,10 +18,7 @@ export const createStudent_controller = async (
 
 		res.status(201).json({ data: student });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -35,17 +30,11 @@ export const getStudents_controller = async (_req: Request, res: Response) => {
 
 		res.status(200).json({ data: students });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getOneStudent_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const getOneStudent_controller = async (req: Request, res: Response) => {
 	const { id: _id } = req.params;
 
 	try {
@@ -53,17 +42,11 @@ export const getOneStudent_controller = async (
 
 		res.status(200).json({ data: student });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const updateStudent_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const updateStudent_controller = async (req: Request, res: Response) => {
 	try {
 		const { id: _id } = req.params;
 		const data = getStudentDataOfRequest(req.body);
@@ -79,10 +62,7 @@ export const updateStudent_controller = async (
 	}
 };
 
-export const deleteStudent_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const deleteStudent_controller = async (req: Request, res: Response) => {
 	try {
 		const { id: _id } = req.params;
 

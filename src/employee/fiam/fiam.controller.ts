@@ -8,11 +8,9 @@ import {
 } from "./fiam.service";
 import getFiamDataOfRequest from "./helpers/getFiamData.helper";
 import { ErrorsMessages } from "../../config/messages";
+import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
 
-export const createFiam_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const createFiam_controller = async (req: Request, res: Response) => {
 	const data = getFiamDataOfRequest(req.body);
 
 	try {
@@ -20,10 +18,7 @@ export const createFiam_controller = async (
 
 		res.status(201).json({ data: fiam });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -35,17 +30,11 @@ export const getFiams_controller = async (_req: Request, res: Response) => {
 
 		res.status(200).json({ data: fiams });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getOneFiam_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const getOneFiam_controller = async (req: Request, res: Response) => {
 	const { id: _id } = req.params;
 
 	try {
@@ -53,17 +42,11 @@ export const getOneFiam_controller = async (
 
 		res.status(200).json({ data: fiam });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const updateFiam_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const updateFiam_controller = async (req: Request, res: Response) => {
 	try {
 		const { id: _id } = req.params;
 		const data = getFiamDataOfRequest(req.body);
@@ -73,16 +56,11 @@ export const updateFiam_controller = async (
 		res.json({ data: fiam });
 	} catch (error) {
 		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.fiam.update });
+		res.status(500).json({ error: true, message: ErrorsMessages.fiam.update });
 	}
 };
 
-export const deleteFiam_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const deleteFiam_controller = async (req: Request, res: Response) => {
 	try {
 		const { id: _id } = req.params;
 
@@ -92,8 +70,6 @@ export const deleteFiam_controller = async (
 	} catch (error) {
 		console.log(error);
 
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.fiam.delete });
+		res.status(500).json({ error: true, message: ErrorsMessages.fiam.delete });
 	}
 };

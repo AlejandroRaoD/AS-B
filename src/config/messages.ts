@@ -23,9 +23,12 @@ export const successMessages = {
 export const ErrorsMessages = {
 	notCreated: (item: moduleItems) => `the ${item} are not created`,
 	notFound: (item: moduleItems) => `the ${item} not found`,
-	duplicate: (item: moduleItems) => `the ${item} ready exist`,
+	alreadyExist: (item: moduleItems) => `the ${item} ready exist`,
+	onUpdate: (item: moduleItems) => `the ${item} not updated`,
+	onDelete: (item: moduleItems) => `the ${item} not deleted`,
 
 	common: {
+		internal: "internal server error",
 		duplicate: "item ready exist",
 	},
 

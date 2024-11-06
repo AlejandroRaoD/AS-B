@@ -8,11 +8,9 @@ import {
 } from "./catedra.service";
 import getCatedraDataOfRequest from "./helpers/getCatedraData.helper";
 import { ErrorsMessages } from "../../config/messages";
+import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
 
-export const createCatedra_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const createCatedra_controller = async (req: Request, res: Response) => {
 	const data = getCatedraDataOfRequest(req.body);
 
 	try {
@@ -20,10 +18,7 @@ export const createCatedra_controller = async (
 
 		res.status(201).json({ data: catedra });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -35,17 +30,11 @@ export const getCatedras_controller = async (_req: Request, res: Response) => {
 
 		res.status(200).json({ data: catedras });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getOneCatedra_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const getOneCatedra_controller = async (req: Request, res: Response) => {
 	const { id: _id } = req.params;
 
 	try {
@@ -53,17 +42,11 @@ export const getOneCatedra_controller = async (
 
 		res.status(200).json({ data: catedra });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const updateCatedra_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const updateCatedra_controller = async (req: Request, res: Response) => {
 	try {
 		const { id: _id } = req.params;
 		const data = getCatedraDataOfRequest(req.body);
@@ -79,10 +62,7 @@ export const updateCatedra_controller = async (
 	}
 };
 
-export const deleteCatedra_controller = async (
-	req: Request,
-	res: Response
-) => {
+export const deleteCatedra_controller = async (req: Request, res: Response) => {
 	try {
 		const { id: _id } = req.params;
 

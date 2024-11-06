@@ -8,6 +8,7 @@ import {
 } from "./employee.service";
 import getEmployeeDataOfRequest from "./helpers/getEmployeeData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createEmployee_controller = async (
 	req: Request,
@@ -20,10 +21,7 @@ export const createEmployee_controller = async (
 
 		res.status(201).json({ data: employee });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -35,10 +33,7 @@ export const getEmployees_controller = async (_req: Request, res: Response) => {
 
 		res.status(200).json({ data: employees });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +48,7 @@ export const getOneEmployee_controller = async (
 
 		res.status(200).json({ data: employee });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 

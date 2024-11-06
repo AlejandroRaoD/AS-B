@@ -8,6 +8,7 @@ import {
 } from "./enrollmentPeriod.service";
 import getEnrollmentPeriodDataOfRequest from "./helpers/getEnrollmentPeriodData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createEnrollmentPeriod_controller = async (
 	req: Request,
@@ -20,14 +21,14 @@ export const createEnrollmentPeriod_controller = async (
 
 		res.status(201).json({ data: enrollmentPeriod });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getEnrollmentPeriods_controller = async (_req: Request, res: Response) => {
+export const getEnrollmentPeriods_controller = async (
+	_req: Request,
+	res: Response
+) => {
 	// const query = req.query
 
 	try {
@@ -35,10 +36,7 @@ export const getEnrollmentPeriods_controller = async (_req: Request, res: Respon
 
 		res.status(200).json({ data: enrollmentPeriods });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +51,7 @@ export const getOneEnrollmentPeriod_controller = async (
 
 		res.status(200).json({ data: enrollmentPeriod });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 

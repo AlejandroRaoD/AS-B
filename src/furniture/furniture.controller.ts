@@ -8,6 +8,7 @@ import {
 } from "./furniture.service";
 import getFurnitureDataOfRequest from "./helpers/getFurnitureData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createFurniture_controller = async (
 	req: Request,
@@ -20,14 +21,14 @@ export const createFurniture_controller = async (
 
 		res.status(201).json({ data: furniture });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getFurnitures_controller = async (_req: Request, res: Response) => {
+export const getFurnitures_controller = async (
+	_req: Request,
+	res: Response
+) => {
 	// const query = req.query
 
 	try {
@@ -35,10 +36,7 @@ export const getFurnitures_controller = async (_req: Request, res: Response) => 
 
 		res.status(200).json({ data: furnitures });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +51,7 @@ export const getOneFurniture_controller = async (
 
 		res.status(200).json({ data: furniture });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 

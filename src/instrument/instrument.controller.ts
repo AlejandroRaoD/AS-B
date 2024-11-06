@@ -8,6 +8,7 @@ import {
 } from "./instrument.service";
 import getInstrumentDataOfRequest from "./helpers/getInstrumentData.helper";
 import { ErrorsMessages } from "../config/messages";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createInstrument_controller = async (
 	req: Request,
@@ -20,14 +21,14 @@ export const createInstrument_controller = async (
 
 		res.status(201).json({ data: instrument });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
-export const getInstruments_controller = async (_req: Request, res: Response) => {
+export const getInstruments_controller = async (
+	_req: Request,
+	res: Response
+) => {
 	// const query = req.query
 
 	try {
@@ -35,10 +36,7 @@ export const getInstruments_controller = async (_req: Request, res: Response) =>
 
 		res.status(200).json({ data: instruments });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -53,10 +51,7 @@ export const getOneInstrument_controller = async (
 
 		res.status(200).json({ data: instrument });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
