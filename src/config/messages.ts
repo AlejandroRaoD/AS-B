@@ -1,4 +1,34 @@
+export enum moduleItems {
+	nucleo = "nucleo",
+	user = "usuario",
+	sede = "sede",
+	employee = "employee",
+	programa = "programa",
+	catedra = "catedra",
+	fiam = "fiam",
+	student = "student",
+	representative = "representative",
+	studentRepresentative = "studentRepresentative",
+	furniture = "furniture",
+	instrument = "instrument",
+	comodato = "comodato",
+	enrollmentPeriod = "enrollmentPeriod",
+	studentEnrollment = "studentEnrollment",
+}
+
+export const successMessages = {
+	created: (item: moduleItems) => `the ${item} are created`,
+};
+
 export const ErrorsMessages = {
+	notCreated: (item: moduleItems) => `the ${item} are not created`,
+	notFound: (item: moduleItems) => `the ${item} not found`,
+	duplicate: (item: moduleItems) => `the ${item} ready exist`,
+
+	common: {
+		duplicate: "item ready exist",
+	},
+
 	user: {
 		notCreated: "notCreated",
 		notFound: "user not found",
@@ -6,7 +36,9 @@ export const ErrorsMessages = {
 		whenObtaining: "error when obtaining",
 		whenObtainingProfile: "whenObtainingProfile",
 	},
+
 	nucleo: {
+		alreadyExist: "nucleo name already exists",
 		notCreated: "notCreated",
 		notFound: "nucleo not found",
 		whenObtaining: "error when obtaining",

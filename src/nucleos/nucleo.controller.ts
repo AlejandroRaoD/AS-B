@@ -8,6 +8,7 @@ import {
 	getOneNucleo_service,
 	updateNucleo_service,
 } from "./nucleo.service";
+import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createNucleo_controller = async (req: Request, res: Response) => {
 	const data = getNucleoDataOfRequest(req.body);
@@ -17,10 +18,7 @@ export const createNucleo_controller = async (req: Request, res: Response) => {
 
 		res.status(201).json({ data: nucleo });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -47,10 +45,7 @@ export const getOneNucleo_controller = async (req: Request, res: Response) => {
 
 		res.status(200).json({ data: nucleo });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -63,10 +58,7 @@ export const updateNucleo_controller = async (req: Request, res: Response) => {
 
 		res.json({ data: nucleo });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorsMessages.nucleo.update });
+		errorHandlerHelper(error, res);
 	}
 };
 

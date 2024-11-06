@@ -1,8 +1,10 @@
+import { isValidObjectId } from "mongoose";
 import { ErrorsMessages } from "../config/messages";
 import nucleoModel, {
 	nucleo_from_DB,
 	nucleoAttributes,
 } from "./models/nucleo.model";
+import { ErrorWithHttpStatus } from "../common/classes/ErrorWithHttpStatus";
 
 // ****************************************************************************
 // 										             creacion
@@ -11,16 +13,17 @@ import nucleoModel, {
 export const createNucleo_service = async (
 	data: nucleoAttributes
 ): Promise<nucleo_from_DB> => {
-	try {
-		const nucleo = new nucleoModel(data);
+	const { name } = data;
 
-		await nucleo.save();
+	const exist = await getOneNucleo_service(name);
+	if (exist)
+		throw new ErrorWithHttpStatus(400, ErrorsMessages.nucleo.alreadyExist);
 
-		return nucleo;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.nucleo.notCreated);
-	}
+	const nucleo = new nucleoModel(data);
+
+	await nucleo.save();
+
+	return nucleo;
 };
 
 export const getNucleos_service = async (): Promise<nucleo_from_DB[]> => {
@@ -35,10 +38,12 @@ export const getNucleos_service = async (): Promise<nucleo_from_DB[]> => {
 };
 
 export const getOneNucleo_service = async (
-	_id: string
+	term: string
 ): Promise<nucleo_from_DB> => {
 	try {
-		const nucleo = await nucleoModel.findById(_id);
+		const nucleo = isValidObjectId(term)
+			? await nucleoModel.findById(term)
+			: await nucleoModel.findOne({ name: term });
 
 		return nucleo;
 	} catch (error) {
@@ -53,16 +58,18 @@ export const updateNucleo_service = async (
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
 
-	try {
-		const nucleo = await nucleoModel.findById(_id);
+	const exist = await getOneNucleo_service(name);
 
-		nucleo.name = name;
+	if (exist)
+		throw new ErrorWithHttpStatus(403, ErrorsMessages.nucleo.alreadyExist);
 
-		return nucleo;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.nucleo.whenObtaining);
-	}
+	const nucleo = await nucleoModel.findById(_id);
+
+	nucleo.name = name;
+
+	await nucleo.save();
+
+	return nucleo;
 };
 
 export const deleteNucleo_service = async (_id: string): Promise<void> => {
