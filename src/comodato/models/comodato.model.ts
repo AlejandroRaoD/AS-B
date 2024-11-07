@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export enum ComodatoStatus {
 	active = "a",
+	delete = "d"
 }
 
 export interface ComodatoAttributes {
@@ -34,6 +35,8 @@ const ComodatoSchema = new mongoose.Schema({
 	status: { type: String, default: ComodatoStatus.active },
 	initDate: { type: Date, default: new Date() },
 	endDate: { type: Date },
+	
+	// todo: automatizar
 	contractNumber: { type: Number, require: true, unique: true },
 });
 

@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 
 export enum FiamTypes {
+	S = "S",
+	AAA = "AAA",
+	AA = "AA",
 	A = "A",
 	B = "B",
+	C = "C",
 }
 
 export interface fiamAttributes {

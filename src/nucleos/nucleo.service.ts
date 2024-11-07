@@ -91,6 +91,7 @@ export const deleteNucleo_service = async (
 			ErrorsMessages.notFound(moduleItems.nucleo)
 		);
 
+	// todo: que no se pueda eliminar si tiene referencias
 	nucleo.status = nucleoStatus.delete;
 
 	await nucleo.save();
