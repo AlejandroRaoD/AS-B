@@ -6,17 +6,18 @@ import {
 	getOnePrograma_service,
 	updatePrograma_service,
 } from "./programa.service";
-import getProgramaDataOfRequest from "./helpers/getProgramaData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { CreateProgramaDto } from "./dto/create-programa.dto";
+import { QueryProgramaDto } from "./dto/query-programa.dto";
+import { UpdateProgramaDto } from "./dto/update-programa.dto";
 
 export const createPrograma_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	
 	try {
-		const data = getProgramaDataOfRequest(req.body);
+		const data = matchedData(req) as CreateProgramaDto;
 		const programa = await createPrograma_service(data);
 
 		res.status(201).json({ data: programa });
@@ -25,10 +26,11 @@ export const createPrograma_controller = async (
 	}
 };
 
-export const getProgramas_controller = async (_req: Request, res: Response) => {
-
+export const getProgramas_controller = async (req: Request, res: Response) => {
 	try {
-		const programas = await getProgramas_service();
+		const query = matchedData(req) as QueryProgramaDto;
+
+		const programas = await getProgramas_service(query);
 
 		res.status(200).json({ data: programas });
 	} catch (error) {
@@ -40,10 +42,10 @@ export const getOnePrograma_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const programa = await getOnePrograma_service(_id);
+		const programa = await getOnePrograma_service(id);
 
 		res.status(200).json({ data: programa });
 	} catch (error) {
@@ -56,17 +58,14 @@ export const updatePrograma_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getProgramaDataOfRequest(req.body);
+		const { id } = req.params;
+		const data = matchedData(req.body) as UpdateProgramaDto;
 
-		const programa = await updatePrograma_service(_id, data);
+		const programa = await updatePrograma_service(id, data);
 
 		res.json({ data: programa });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.programa.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -75,16 +74,12 @@ export const deletePrograma_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deletePrograma_service(_id);
+		const program = await deletePrograma_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: program });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.programa.delete });
+		errorHandlerHelper(error, res);
 	}
 };

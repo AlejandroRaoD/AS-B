@@ -7,12 +7,17 @@ import {
 	updatePrograma_controller,
 } from "../programa.controller";
 
+import {
+	ProgramaValidator,
+	QueryProgramaValidator,
+} from "../validators/programa.validator";
+
 const router = express.Router();
 
-router.post("/", createPrograma_controller);
-router.get("/", getProgramas_controller);
+router.post("/", ProgramaValidator, createPrograma_controller);
+router.get("/", QueryProgramaValidator, getProgramas_controller);
 router.get("/:id", getOnePrograma_controller);
-router.put("/:id", updatePrograma_controller);
+router.put("/:id", ProgramaValidator, updatePrograma_controller);
 router.delete("/:id", deletePrograma_controller);
 
 export default router;

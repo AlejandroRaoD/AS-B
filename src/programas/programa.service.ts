@@ -1,73 +1,85 @@
-import { ErrorMsg } from "../config/messages";
+import {
+	BadRequestException,
+	NotFoundException,
+} from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateProgramaDto } from "./dto/create-programa.dto";
+import { QueryProgramaDto } from "./dto/query-programa.dto";
+import { UpdateProgramaDto } from "./dto/update-programa.dto";
 import programaModel, {
 	programaAttributes,
+	programaStatus,
 	programa_from_DB,
 } from "./models/programa.model";
 
 export const createPrograma_service = async (
-	data: programaAttributes
+	data: CreateProgramaDto
 ): Promise<programa_from_DB> => {
-	try {
-		const programa = new programaModel(data);
+	const programa = new programaModel(data);
 
-		await programa.save();
+	await programa.save();
 
-		return programa;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.programa.notCreated);
-	}
+	return programa;
 };
 
-export const getProgramas_service = async (): Promise<programa_from_DB[]> => {
-	try {
-		const programas = await programaModel.find();
+export const getProgramas_service = async (
+	queryProgramaDto: QueryProgramaDto
+): Promise<programa_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryProgramaDto;
 
-		return programas;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.programa.whenObtaining);
-	}
+	const programas = await programaModel
+		.find(query)
+		.skip(skip)
+		.limit(limit)
+		.sort("name");
+
+	return programas;
 };
 
 export const getOnePrograma_service = async (
-	_id: string
+	id: string
 ): Promise<programa_from_DB> => {
-	try {
-		const programa = await programaModel.findById(_id);
+	const programa = await programaModel.findById(id);
 
-		return programa;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.programa.whenObtaining);
-	}
+	if (programa)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.programa));
+
+	return programa;
 };
 
 export const updatePrograma_service = async (
-	_id: string,
-	data: programaAttributes
+	id: string,
+	updateProgramaDto: UpdateProgramaDto
 ): Promise<programa_from_DB> => {
-	try {
-		await programaModel.updateOne({ _id }, data);
+	const programa = await programaModel.findOneAndUpdate(
+		{ _id: id },
+		updateProgramaDto,
+		{ new: true }
+	);
 
-		const programa = programaModel.findById(_id);
+	if (programa)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.programa));
 
-		return programa;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.programa.whenObtaining);
-	}
+	return programa;
 };
 
-export const deletePrograma_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await programaModel.deleteOne({ _id });
+export const deletePrograma_service = async (
+	id: string
+): Promise<programa_from_DB> => {
+	// todo: ver si tiene catedras
+	// const hasSedes = await getSedes_service({ nucleoId: id, skip: 0, limit: 1 });
 
-		console.log(result);
+	// if (hasSedes.length)
+	// 	throw new BadRequestException(ErrorMsg.hasDependencies(moduleItems.nucleo));
 
-		if (!result.deletedCount) throw new Error(ErrorMsg.programa.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.programa.whenObtaining);
-	}
+	const programa = await programaModel.findOneAndUpdate(
+		{ _id: id },
+		{ status: programaStatus.delete },
+		{ new: true }
+	);
+
+	if (!programa)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.programa));
+
+	return programa;
 };
