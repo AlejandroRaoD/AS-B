@@ -7,7 +7,7 @@ import {
 	updateCatedra_service,
 } from "./catedra.service";
 import getCatedraDataOfRequest from "./helpers/getCatedraData.helper";
-import { ErrorsMessages } from "../../config/messages";
+import { ErrorMsg } from "../../config/messages";
 import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
 
 export const createCatedra_controller = async (req: Request, res: Response) => {
@@ -58,7 +58,7 @@ export const updateCatedra_controller = async (req: Request, res: Response) => {
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.catedra.update });
+			.json({ error: true, message: ErrorMsg.catedra.update });
 	}
 };
 
@@ -74,6 +74,6 @@ export const deleteCatedra_controller = async (req: Request, res: Response) => {
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.catedra.delete });
+			.json({ error: true, message: ErrorMsg.catedra.delete });
 	}
 };

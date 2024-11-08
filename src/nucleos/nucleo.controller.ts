@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import getNucleoDataOfRequest from "./helpers/getNucleoData.helper";
 import {
 	createNucleo_service,
 	deleteNucleo_service,
@@ -8,11 +7,14 @@ import {
 	updateNucleo_service,
 } from "./nucleo.service";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { nucleoAttributes } from "./models/nucleo.model";
+import { QueryNucleoDto } from "./dto/query-nucleo.dto";
 
 export const createNucleo_controller = async (req: Request, res: Response) => {
-	const data = getNucleoDataOfRequest(req.body);
-
 	try {
+		const data = matchedData(req) as Omit<nucleoAttributes, "_id" | "status">;
+
 		const nucleo = await createNucleo_service(data);
 
 		res.status(201).json({ data: nucleo });
@@ -21,9 +23,11 @@ export const createNucleo_controller = async (req: Request, res: Response) => {
 	}
 };
 
-export const getNucleos_controller = async (_req: Request, res: Response) => {
+export const getNucleos_controller = async (req: Request, res: Response) => {
+	const query = matchedData(req) as QueryNucleoDto;
+
 	try {
-		const nucleos = await getNucleos_service();
+		const nucleos = await getNucleos_service(query);
 
 		res.status(200).json({ data: nucleos });
 	} catch (error) {
@@ -46,7 +50,7 @@ export const getOneNucleo_controller = async (req: Request, res: Response) => {
 export const updateNucleo_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
-		const data = getNucleoDataOfRequest(req.body);
+		const data = matchedData(req) as Omit<nucleoAttributes, "_id" | "status">;
 
 		const nucleo = await updateNucleo_service(id, data);
 

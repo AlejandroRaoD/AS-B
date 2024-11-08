@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import studentModel, {
 	studentAttributes,
 	student_from_DB,
@@ -15,7 +15,7 @@ export const createStudent_service = async (
 		return student;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.student.notCreated);
+		throw new Error(ErrorMsg.student.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getStudents_service = async (): Promise<student_from_DB[]> => {
 		return students;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.student.whenObtaining);
+		throw new Error(ErrorMsg.student.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneStudent_service = async (
 		return student;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.student.whenObtaining);
+		throw new Error(ErrorMsg.student.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateStudent_service = async (
 		return student;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.student.whenObtaining);
+		throw new Error(ErrorMsg.student.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteStudent_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.student.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.student.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.student.whenObtaining);
+		throw new Error(ErrorMsg.student.whenObtaining);
 	}
 };

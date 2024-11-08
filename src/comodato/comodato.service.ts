@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import comodatoModel, {
 	ComodatoAttributes,
 	comodato_from_DB,
@@ -15,7 +15,7 @@ export const createComodato_service = async (
 		return comodato;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.comodato.notCreated);
+		throw new Error(ErrorMsg.comodato.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getComodatos_service = async (): Promise<comodato_from_DB[]> => {
 		return comodatos;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.comodato.whenObtaining);
+		throw new Error(ErrorMsg.comodato.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneComodato_service = async (
 		return comodato;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.comodato.whenObtaining);
+		throw new Error(ErrorMsg.comodato.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateComodato_service = async (
 		return comodato;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.comodato.whenObtaining);
+		throw new Error(ErrorMsg.comodato.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteComodato_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.comodato.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.comodato.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.comodato.whenObtaining);
+		throw new Error(ErrorMsg.comodato.whenObtaining);
 	}
 };

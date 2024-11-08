@@ -7,7 +7,7 @@ import {
 	updateFurniture_service,
 } from "./furniture.service";
 import getFurnitureDataOfRequest from "./helpers/getFurnitureData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createFurniture_controller = async (
@@ -70,7 +70,7 @@ export const updateFurniture_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.furniture.update });
+			.json({ error: true, message: ErrorMsg.furniture.update });
 	}
 };
 
@@ -89,6 +89,6 @@ export const deleteFurniture_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.furniture.delete });
+			.json({ error: true, message: ErrorMsg.furniture.delete });
 	}
 };

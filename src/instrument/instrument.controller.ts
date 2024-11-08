@@ -7,7 +7,7 @@ import {
 	updateInstrument_service,
 } from "./instrument.service";
 import getInstrumentDataOfRequest from "./helpers/getInstrumentData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createInstrument_controller = async (
@@ -70,7 +70,7 @@ export const updateInstrument_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.instrument.update });
+			.json({ error: true, message: ErrorMsg.instrument.update });
 	}
 };
 
@@ -89,6 +89,6 @@ export const deleteInstrument_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.instrument.delete });
+			.json({ error: true, message: ErrorMsg.instrument.delete });
 	}
 };

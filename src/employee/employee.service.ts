@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import employeeModel, {
 	employeeAttributes,
 	employee_from_DB,
@@ -15,7 +15,7 @@ export const createEmployee_service = async (
 		return employee;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.employee.notCreated);
+		throw new Error(ErrorMsg.employee.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getEmployees_service = async (): Promise<employee_from_DB[]> => {
 		return employees;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.employee.whenObtaining);
+		throw new Error(ErrorMsg.employee.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneEmployee_service = async (
 		return employee;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.employee.whenObtaining);
+		throw new Error(ErrorMsg.employee.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateEmployee_service = async (
 		return employee;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.employee.whenObtaining);
+		throw new Error(ErrorMsg.employee.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteEmployee_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.employee.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.employee.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.employee.whenObtaining);
+		throw new Error(ErrorMsg.employee.whenObtaining);
 	}
 };

@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import representativeModel, {
 	representativeAttributes,
 	representative_from_DB,
@@ -15,7 +15,7 @@ export const createRepresentative_service = async (
 		return representative;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.representative.notCreated);
+		throw new Error(ErrorMsg.representative.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getRepresentatives_service = async (): Promise<representative_from_
 		return representatives;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.representative.whenObtaining);
+		throw new Error(ErrorMsg.representative.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneRepresentative_service = async (
 		return representative;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.representative.whenObtaining);
+		throw new Error(ErrorMsg.representative.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateRepresentative_service = async (
 		return representative;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.representative.whenObtaining);
+		throw new Error(ErrorMsg.representative.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteRepresentative_service = async (_id: string): Promise<void> =
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.representative.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.representative.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.representative.whenObtaining);
+		throw new Error(ErrorMsg.representative.whenObtaining);
 	}
 };

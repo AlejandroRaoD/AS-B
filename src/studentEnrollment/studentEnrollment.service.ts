@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import studentEnrollmentModel, {
 	studentEnrollmentAttributes,
 	studentEnrollment_from_DB,
@@ -15,7 +15,7 @@ export const createStudentEnrollment_service = async (
 		return studentEnrollment;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.studentEnrollment.notCreated);
+		throw new Error(ErrorMsg.studentEnrollment.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getStudentEnrollments_service = async (): Promise<studentEnrollment
 		return studentEnrollments;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.studentEnrollment.whenObtaining);
+		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneStudentEnrollment_service = async (
 		return studentEnrollment;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.studentEnrollment.whenObtaining);
+		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateStudentEnrollment_service = async (
 		return studentEnrollment;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.studentEnrollment.whenObtaining);
+		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteStudentEnrollment_service = async (_id: string): Promise<void
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.studentEnrollment.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.studentEnrollment.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.studentEnrollment.whenObtaining);
+		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
 	}
 };

@@ -6,7 +6,7 @@ import {
 	get_User_by_email_service,
 	get_profile_User_service,
 } from "./user.service";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 
 export const signin_user_controller = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
@@ -36,7 +36,7 @@ export const signin_user_controller = async (req: Request, res: Response) => {
 		console.log(error);
 		res
 			.status(400)
-			.json({ error: true, message: ErrorsMessages.user.notFound });
+			.json({ error: true, message: ErrorMsg.user.notFound });
 	}
 };
 
@@ -46,7 +46,7 @@ export const profile_controller = async (req: Request, res: Response) => {
 	if (!user) {
 		res
 			.status(300)
-			.json({ error: true, message: ErrorsMessages.user.notToken });
+			.json({ error: true, message: ErrorMsg.user.notToken });
 		return;
 	}
 	const { _id } = user;
@@ -59,6 +59,6 @@ export const profile_controller = async (req: Request, res: Response) => {
 		console.log(error);
 		res
 			.status(500)
-			.json({ error, message: ErrorsMessages.user.whenObtainingProfile });
+			.json({ error, message: ErrorMsg.user.whenObtainingProfile });
 	}
 };

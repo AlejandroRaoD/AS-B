@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import programaModel, {
 	programaAttributes,
 	programa_from_DB,
@@ -15,7 +15,7 @@ export const createPrograma_service = async (
 		return programa;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.programa.notCreated);
+		throw new Error(ErrorMsg.programa.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getProgramas_service = async (): Promise<programa_from_DB[]> => {
 		return programas;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.programa.whenObtaining);
+		throw new Error(ErrorMsg.programa.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOnePrograma_service = async (
 		return programa;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.programa.whenObtaining);
+		throw new Error(ErrorMsg.programa.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updatePrograma_service = async (
 		return programa;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.programa.whenObtaining);
+		throw new Error(ErrorMsg.programa.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deletePrograma_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.programa.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.programa.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.programa.whenObtaining);
+		throw new Error(ErrorMsg.programa.whenObtaining);
 	}
 };

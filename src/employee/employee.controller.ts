@@ -7,7 +7,7 @@ import {
 	updateEmployee_service,
 } from "./employee.service";
 import getEmployeeDataOfRequest from "./helpers/getEmployeeData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createEmployee_controller = async (
@@ -67,7 +67,7 @@ export const updateEmployee_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.employee.update });
+			.json({ error: true, message: ErrorMsg.employee.update });
 	}
 };
 
@@ -86,6 +86,6 @@ export const deleteEmployee_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.employee.delete });
+			.json({ error: true, message: ErrorMsg.employee.delete });
 	}
 };

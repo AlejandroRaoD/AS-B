@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import instrumentModel, {
 	instrumentAttributes,
 	instrument_from_DB,
@@ -15,7 +15,7 @@ export const createInstrument_service = async (
 		return instrument;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.instrument.notCreated);
+		throw new Error(ErrorMsg.instrument.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getInstruments_service = async (): Promise<instrument_from_DB[]> =>
 		return instruments;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.instrument.whenObtaining);
+		throw new Error(ErrorMsg.instrument.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneInstrument_service = async (
 		return instrument;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.instrument.whenObtaining);
+		throw new Error(ErrorMsg.instrument.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateInstrument_service = async (
 		return instrument;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.instrument.whenObtaining);
+		throw new Error(ErrorMsg.instrument.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteInstrument_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.instrument.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.instrument.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.instrument.whenObtaining);
+		throw new Error(ErrorMsg.instrument.whenObtaining);
 	}
 };

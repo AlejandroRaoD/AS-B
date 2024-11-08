@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import enrollmentPeriodModel, {
 	enrollmentPeriodAttributes,
 	enrollmentPeriod_from_DB,
@@ -15,7 +15,7 @@ export const createEnrollmentPeriod_service = async (
 		return enrollmentPeriod;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.enrollmentPeriod.notCreated);
+		throw new Error(ErrorMsg.enrollmentPeriod.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getEnrollmentPeriods_service = async (): Promise<enrollmentPeriod_f
 		return enrollmentPeriods;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.enrollmentPeriod.whenObtaining);
+		throw new Error(ErrorMsg.enrollmentPeriod.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneEnrollmentPeriod_service = async (
 		return enrollmentPeriod;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.enrollmentPeriod.whenObtaining);
+		throw new Error(ErrorMsg.enrollmentPeriod.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateEnrollmentPeriod_service = async (
 		return enrollmentPeriod;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.enrollmentPeriod.whenObtaining);
+		throw new Error(ErrorMsg.enrollmentPeriod.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteEnrollmentPeriod_service = async (_id: string): Promise<void>
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.enrollmentPeriod.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.enrollmentPeriod.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.enrollmentPeriod.whenObtaining);
+		throw new Error(ErrorMsg.enrollmentPeriod.whenObtaining);
 	}
 };

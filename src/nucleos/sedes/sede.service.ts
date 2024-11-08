@@ -1,74 +1,73 @@
-// ****************************************************************************
-// 										             creacion
-// ****************************************************************************
-
-import { ErrorsMessages } from "../../config/messages";
-import sedeModel, { sedeAttributes, sede_from_DB } from "./models/sede.model";
+import { NotFoundException } from "../../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../../config/messages";
+import { QuerySedeDto } from "./dto/query-sede.dto";
+import sedeModel, {
+	sedeAttributes,
+	sedeStatus,
+	sede_from_DB,
+} from "./models/sede.model";
 
 export const createSede_service = async (
-	data: sedeAttributes
+	data: Omit<sedeAttributes, "_id" | "status">
 ): Promise<sede_from_DB> => {
-	try {
-		const sede = new sedeModel(data);
+	const sede = new sedeModel(data);
 
-		await sede.save();
+	await sede.save();
 
-		return sede;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.sede.notCreated);
-	}
+	return sede;
 };
 
-export const getSedes_service = async (): Promise<sede_from_DB[]> => {
-	try {
-		const sedes = await sedeModel.find();
+export const getSedes_service = async (
+	querySedeDto?: QuerySedeDto
+): Promise<sede_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = querySedeDto;
 
-		return sedes;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.sede.whenObtaining);
-	}
+	const sedes = await sedeModel
+		.find(query)
+		.skip(skip)
+		.limit(limit)
+		.sort("name");
+
+	return sedes;
 };
 
 export const getOneSede_service = async (
 	_id: string
 ): Promise<sede_from_DB> => {
-	try {
-		const sede = await sedeModel.findById(_id);
+	const sede = await sedeModel.findById(_id);
 
-		return sede;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.sede.whenObtaining);
-	}
+	if (!sede) throw new NotFoundException(ErrorMsg.notFound(moduleItems.sede));
+
+	return sede;
 };
 
 export const updateSede_service = async (
 	_id: string,
-	data: sedeAttributes
+	data: Omit<sedeAttributes, "_id" | "status">
 ): Promise<sede_from_DB> => {
-	try {
-		await sedeModel.updateOne({ _id }, data);
+	const { name, address, phone_number } = data;
 
-		const sede = sedeModel.findById(_id);
+	const sede = await sedeModel.findOneAndUpdate(
+		{ _id },
+		{ name, address, phone_number },
+		{ new: true }
+	);
 
-		return sede;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.sede.whenObtaining);
-	}
+	return sede;
 };
 
-export const deleteSede_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await sedeModel.deleteOne({ _id });
+export const deleteSede_service = async (
+	_id: string
+): Promise<sede_from_DB> => {
+	const sede = await sedeModel.findOneAndUpdate(
+		{ _id },
+		{ status: sedeStatus.delete },
+		{ new: true }
+	);
 
-		console.log(result);
+	// todo: que no se pueda marcar como eliminado si tiene referencias
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.sede.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.sede.whenObtaining);
-	}
+	if (!sede) throw new NotFoundException(ErrorMsg.notFound(moduleItems.sede));
+
+	return sede;
 };

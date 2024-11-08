@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import furnitureModel, {
 	furnitureAttributes,
 	furniture_from_DB,
@@ -15,7 +15,7 @@ export const createFurniture_service = async (
 		return furniture;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.furniture.notCreated);
+		throw new Error(ErrorMsg.furniture.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getFurnitures_service = async (): Promise<furniture_from_DB[]> => {
 		return furnitures;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.furniture.whenObtaining);
+		throw new Error(ErrorMsg.furniture.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneFurniture_service = async (
 		return furniture;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.furniture.whenObtaining);
+		throw new Error(ErrorMsg.furniture.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateFurniture_service = async (
 		return furniture;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.furniture.whenObtaining);
+		throw new Error(ErrorMsg.furniture.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteFurniture_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.furniture.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.furniture.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.furniture.whenObtaining);
+		throw new Error(ErrorMsg.furniture.whenObtaining);
 	}
 };

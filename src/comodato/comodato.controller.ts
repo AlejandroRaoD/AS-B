@@ -7,7 +7,7 @@ import {
 	updateComodato_service,
 } from "./comodato.service";
 import getComodatoDataOfRequest from "./helpers/getComodatoData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createComodato_controller = async (
@@ -67,7 +67,7 @@ export const updateComodato_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.comodato.update });
+			.json({ error: true, message: ErrorMsg.comodato.update });
 	}
 };
 
@@ -86,6 +86,6 @@ export const deleteComodato_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.comodato.delete });
+			.json({ error: true, message: ErrorMsg.comodato.delete });
 	}
 };

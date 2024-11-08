@@ -2,7 +2,7 @@
 // 										             creacion
 // ****************************************************************************
 
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { employeeAttributes } from "../employee/models/employee.model";
 import userModel, { UserAttributes, User_from_DB } from "./models/user.model";
 
@@ -17,7 +17,7 @@ export const createUser_service = async (
 		return user;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.user.notCreated);
+		throw new Error(ErrorMsg.user.notCreated);
 	}
 };
 
@@ -28,7 +28,7 @@ export const createUser_service = async (
 export const get_User_service = async (_id: string): Promise<User_from_DB> => {
 	const user = await userModel.findById(_id);
 
-	if (!user) throw new Error(ErrorsMessages.user.notFound);
+	if (!user) throw new Error(ErrorMsg.user.notFound);
 
 	return user;
 };
@@ -39,12 +39,12 @@ export const get_User_by_email_service = async (
 	try {
 		const user = await userModel.findOne({ email });
 
-		if (!user) throw new Error(ErrorsMessages.user.notFound);
+		if (!user) throw new Error(ErrorMsg.user.notFound);
 
 		return user;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.user.notFound);
+		throw new Error(ErrorMsg.user.notFound);
 	}
 };
 
@@ -56,13 +56,13 @@ export const get_profile_User_service = async (
 			.findById(_id, { employeeId: 1 })
 			.populate("employeeId");
 
-		if (!user) throw new Error(ErrorsMessages.user.notFound);
+		if (!user) throw new Error(ErrorMsg.user.notFound);
 
 		const { employeeId: profile } = user;
 
 		return profile as unknown as employeeAttributes;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.user.whenObtaining);
+		throw new Error(ErrorMsg.user.whenObtaining);
 	}
 };

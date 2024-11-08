@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../../config/messages";
+import { ErrorMsg } from "../../config/messages";
 import catedraModel, {
 	catedraAttributes,
 	catedra_from_DB,
@@ -15,7 +15,7 @@ export const createCatedra_service = async (
 		return catedra;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.catedra.notCreated);
+		throw new Error(ErrorMsg.catedra.notCreated);
 	}
 };
 
@@ -26,7 +26,7 @@ export const getCatedras_service = async (): Promise<catedra_from_DB[]> => {
 		return catedras;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.catedra.whenObtaining);
+		throw new Error(ErrorMsg.catedra.whenObtaining);
 	}
 };
 
@@ -39,7 +39,7 @@ export const getOneCatedra_service = async (
 		return catedra;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.catedra.whenObtaining);
+		throw new Error(ErrorMsg.catedra.whenObtaining);
 	}
 };
 
@@ -55,7 +55,7 @@ export const updateCatedra_service = async (
 		return catedra;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.catedra.whenObtaining);
+		throw new Error(ErrorMsg.catedra.whenObtaining);
 	}
 };
 
@@ -65,9 +65,9 @@ export const deleteCatedra_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.catedra.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.catedra.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.catedra.whenObtaining);
+		throw new Error(ErrorMsg.catedra.whenObtaining);
 	}
 };

@@ -7,7 +7,7 @@ import {
 	updateStudent_service,
 } from "./student.service";
 import getStudentDataOfRequest from "./helpers/getStudentData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createStudent_controller = async (req: Request, res: Response) => {
@@ -58,7 +58,7 @@ export const updateStudent_controller = async (req: Request, res: Response) => {
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.student.update });
+			.json({ error: true, message: ErrorMsg.student.update });
 	}
 };
 
@@ -74,6 +74,6 @@ export const deleteStudent_controller = async (req: Request, res: Response) => {
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.student.delete });
+			.json({ error: true, message: ErrorMsg.student.delete });
 	}
 };

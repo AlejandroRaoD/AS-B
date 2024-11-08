@@ -7,16 +7,16 @@ import {
 	updatePrograma_service,
 } from "./programa.service";
 import getProgramaDataOfRequest from "./helpers/getProgramaData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createPrograma_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getProgramaDataOfRequest(req.body);
-
+	
 	try {
+		const data = getProgramaDataOfRequest(req.body);
 		const programa = await createPrograma_service(data);
 
 		res.status(201).json({ data: programa });
@@ -26,7 +26,6 @@ export const createPrograma_controller = async (
 };
 
 export const getProgramas_controller = async (_req: Request, res: Response) => {
-	// const query = req.query
 
 	try {
 		const programas = await getProgramas_service();
@@ -67,7 +66,7 @@ export const updatePrograma_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.programa.update });
+			.json({ error: true, message: ErrorMsg.programa.update });
 	}
 };
 
@@ -86,6 +85,6 @@ export const deletePrograma_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.programa.delete });
+			.json({ error: true, message: ErrorMsg.programa.delete });
 	}
 };

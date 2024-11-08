@@ -1,4 +1,4 @@
-import { ErrorsMessages } from "../../config/messages";
+import { ErrorMsg } from "../../config/messages";
 import fiamModel, { fiamAttributes, fiam_from_DB } from "./models/fiam.model";
 
 export const createFiam_service = async (
@@ -12,7 +12,7 @@ export const createFiam_service = async (
 		return fiam;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.fiam.notCreated);
+		throw new Error(ErrorMsg.fiam.notCreated);
 	}
 };
 
@@ -23,7 +23,7 @@ export const getFiams_service = async (): Promise<fiam_from_DB[]> => {
 		return fiams;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.fiam.whenObtaining);
+		throw new Error(ErrorMsg.fiam.whenObtaining);
 	}
 };
 
@@ -36,7 +36,7 @@ export const getOneFiam_service = async (
 		return fiam;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.fiam.whenObtaining);
+		throw new Error(ErrorMsg.fiam.whenObtaining);
 	}
 };
 
@@ -52,7 +52,7 @@ export const updateFiam_service = async (
 		return fiam;
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.fiam.whenObtaining);
+		throw new Error(ErrorMsg.fiam.whenObtaining);
 	}
 };
 
@@ -62,9 +62,9 @@ export const deleteFiam_service = async (_id: string): Promise<void> => {
 
 		console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorsMessages.fiam.notFound);
+		if (!result.deletedCount) throw new Error(ErrorMsg.fiam.notFound);
 	} catch (error) {
 		console.log(error);
-		throw new Error(ErrorsMessages.fiam.whenObtaining);
+		throw new Error(ErrorMsg.fiam.whenObtaining);
 	}
 };

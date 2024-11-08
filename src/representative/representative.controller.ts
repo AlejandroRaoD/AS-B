@@ -7,7 +7,7 @@ import {
 	updateRepresentative_service,
 } from "./representative.service";
 import getRepresentativeDataOfRequest from "./helpers/getRepresentativeData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createRepresentative_controller = async (
@@ -70,7 +70,7 @@ export const updateRepresentative_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.representative.update });
+			.json({ error: true, message: ErrorMsg.representative.update });
 	}
 };
 
@@ -89,6 +89,6 @@ export const deleteRepresentative_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.representative.delete });
+			.json({ error: true, message: ErrorMsg.representative.delete });
 	}
 };

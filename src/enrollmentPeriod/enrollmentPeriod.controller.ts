@@ -7,7 +7,7 @@ import {
 	updateEnrollmentPeriod_service,
 } from "./enrollmentPeriod.service";
 import getEnrollmentPeriodDataOfRequest from "./helpers/getEnrollmentPeriodData.helper";
-import { ErrorsMessages } from "../config/messages";
+import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 
 export const createEnrollmentPeriod_controller = async (
@@ -70,7 +70,7 @@ export const updateEnrollmentPeriod_controller = async (
 		console.log(error);
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.enrollmentPeriod.update });
+			.json({ error: true, message: ErrorMsg.enrollmentPeriod.update });
 	}
 };
 
@@ -89,6 +89,6 @@ export const deleteEnrollmentPeriod_controller = async (
 
 		res
 			.status(500)
-			.json({ error: true, message: ErrorsMessages.enrollmentPeriod.delete });
+			.json({ error: true, message: ErrorMsg.enrollmentPeriod.delete });
 	}
 };

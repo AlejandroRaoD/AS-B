@@ -7,7 +7,7 @@ import {
 	updateFiam_service,
 } from "./fiam.service";
 import getFiamDataOfRequest from "./helpers/getFiamData.helper";
-import { ErrorsMessages } from "../../config/messages";
+import { ErrorMsg } from "../../config/messages";
 import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
 
 export const createFiam_controller = async (req: Request, res: Response) => {
@@ -56,7 +56,7 @@ export const updateFiam_controller = async (req: Request, res: Response) => {
 		res.json({ data: fiam });
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ error: true, message: ErrorsMessages.fiam.update });
+		res.status(500).json({ error: true, message: ErrorMsg.fiam.update });
 	}
 };
 
@@ -70,6 +70,6 @@ export const deleteFiam_controller = async (req: Request, res: Response) => {
 	} catch (error) {
 		console.log(error);
 
-		res.status(500).json({ error: true, message: ErrorsMessages.fiam.delete });
+		res.status(500).json({ error: true, message: ErrorMsg.fiam.delete });
 	}
 };

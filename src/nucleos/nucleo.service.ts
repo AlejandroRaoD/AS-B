@@ -1,28 +1,29 @@
 import { isValidObjectId } from "mongoose";
-import { ErrorsMessages, moduleItems } from "../config/messages";
+
+import { ErrorMsg, moduleItems } from "../config/messages";
 import nucleoModel, {
 	nucleo_from_DB,
 	nucleoAttributes,
 	nucleoStatus,
 } from "./models/nucleo.model";
-import { ErrorWithHttpStatus } from "../common/classes/ErrorWithHttpStatus";
 
-// ****************************************************************************
-// 										             creacion
-// ****************************************************************************
+import {
+	BadRequestException,
+	NotFoundException,
+} from "../common/classes/ErrorWithHttpStatus";
+
+import { QueryNucleoDto } from "./dto/query-nucleo.dto";
+import { getSedes_service } from "./sedes/sede.service";
 
 export const createNucleo_service = async (
-	data: nucleoAttributes
+	data: Omit<nucleoAttributes, "_id" | "status">
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
 
 	const exist = await getOneNucleo_service(name);
 
 	if (exist)
-		throw new ErrorWithHttpStatus(
-			400,
-			ErrorsMessages.alreadyExist(moduleItems.nucleo)
-		);
+		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
 
 	const nucleo = new nucleoModel(data);
 
@@ -31,70 +32,66 @@ export const createNucleo_service = async (
 	return nucleo;
 };
 
-export const getNucleos_service = async (): Promise<nucleo_from_DB[]> => {
-	try {
-		const nucleos = await nucleoModel.find();
+export const getNucleos_service = async (
+	queryNucleoDto?: QueryNucleoDto
+): Promise<nucleo_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryNucleoDto;
 
-		return nucleos;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.nucleo.whenObtaining);
-	}
+	const nucleos = await nucleoModel
+		.find(query)
+		.skip(skip)
+		.limit(limit)
+		.sort("name");
+
+	return nucleos;
 };
 
 export const getOneNucleo_service = async (
 	term: string
 ): Promise<nucleo_from_DB> => {
-	try {
-		const nucleo = isValidObjectId(term)
-			? await nucleoModel.findById(term)
-			: await nucleoModel.findOne({ name: term });
+	const nucleo = isValidObjectId(term)
+		? await nucleoModel.findById(term)
+		: await nucleoModel.findOne({ name: term });
 
-		return nucleo;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorsMessages.nucleo.whenObtaining);
-	}
+	return nucleo;
 };
 
 export const updateNucleo_service = async (
 	id: string,
-	data: nucleoAttributes
+	data: Omit<nucleoAttributes, "_id" | "status">
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
 
 	const exist = await getOneNucleo_service(name);
 
 	if (exist)
-		throw new ErrorWithHttpStatus(
-			400,
-			ErrorsMessages.alreadyExist(moduleItems.nucleo)
-		);
+		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
 
-	const nucleo = await nucleoModel.findById(id);
-
-	nucleo.name = name;
-
-	await nucleo.save();
+	const nucleo = await nucleoModel.findOneAndUpdate(
+		{ _id: id },
+		{ name },
+		{ new: true }
+	);
 
 	return nucleo;
 };
 
 export const deleteNucleo_service = async (
-	_id: string
+	id: string
 ): Promise<nucleo_from_DB> => {
-	const nucleo = await getOneNucleo_service(_id);
+	const hasSedes = await getSedes_service({ nucleoId: id, skip: 0, limit: 1 });
+
+	if (hasSedes.length)
+		throw new BadRequestException(ErrorMsg.hasDependencies(moduleItems.nucleo));
+
+	const nucleo = await nucleoModel.findOneAndUpdate(
+		{ _id: id },
+		{ status: nucleoStatus.delete },
+		{ new: true }
+	);
 
 	if (!nucleo)
-		throw new ErrorWithHttpStatus(
-			404,
-			ErrorsMessages.notFound(moduleItems.nucleo)
-		);
-
-	// todo: que no se pueda eliminar si tiene referencias
-	nucleo.status = nucleoStatus.delete;
-
-	await nucleo.save();
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.nucleo));
 
 	return nucleo;
 };

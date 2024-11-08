@@ -3,3 +3,15 @@ export class ErrorWithHttpStatus extends Error {
 		super(...params);
 	}
 }
+
+export class NotFoundException extends ErrorWithHttpStatus {
+	constructor(readonly message: string, ...params) {
+		super(404, message, ...params);
+	}
+}
+
+export class BadRequestException extends ErrorWithHttpStatus {
+	constructor(readonly message: string, ...params) {
+		super(400, message, ...params);
+	}
+}
