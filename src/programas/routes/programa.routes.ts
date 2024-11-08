@@ -8,16 +8,17 @@ import {
 } from "../programa.controller";
 
 import {
-	ProgramaValidator,
+	CreateProgramaValidator,
 	QueryProgramaValidator,
+	UpdateProgramaValidator,
 } from "../validators/programa.validator";
 
 const router = express.Router();
 
-router.post("/", ProgramaValidator, createPrograma_controller);
+router.post("/", CreateProgramaValidator, createPrograma_controller);
 router.get("/", QueryProgramaValidator, getProgramas_controller);
 router.get("/:id", getOnePrograma_controller);
-router.put("/:id", ProgramaValidator, updatePrograma_controller);
+router.put("/:id", UpdateProgramaValidator, updatePrograma_controller);
 router.delete("/:id", deletePrograma_controller);
 
 export default router;

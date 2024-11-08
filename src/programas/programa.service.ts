@@ -3,11 +3,11 @@ import {
 	NotFoundException,
 } from "../common/classes/ErrorWithHttpStatus";
 import { ErrorMsg, moduleItems } from "../config/messages";
+import { getCatedras_service } from "./catedras/catedra.service";
 import { CreateProgramaDto } from "./dto/create-programa.dto";
 import { QueryProgramaDto } from "./dto/query-programa.dto";
 import { UpdateProgramaDto } from "./dto/update-programa.dto";
 import programaModel, {
-	programaAttributes,
 	programaStatus,
 	programa_from_DB,
 } from "./models/programa.model";
@@ -66,11 +66,16 @@ export const updatePrograma_service = async (
 export const deletePrograma_service = async (
 	id: string
 ): Promise<programa_from_DB> => {
-	// todo: ver si tiene catedras
-	// const hasSedes = await getSedes_service({ nucleoId: id, skip: 0, limit: 1 });
+	const hasCatedras = await getCatedras_service({
+		programaId: id,
+		skip: 0,
+		limit: 1,
+	});
 
-	// if (hasSedes.length)
-	// 	throw new BadRequestException(ErrorMsg.hasDependencies(moduleItems.nucleo));
+	if (hasCatedras.length)
+		throw new BadRequestException(
+			ErrorMsg.hasDependencies(moduleItems.programa)
+		);
 
 	const programa = await programaModel.findOneAndUpdate(
 		{ _id: id },

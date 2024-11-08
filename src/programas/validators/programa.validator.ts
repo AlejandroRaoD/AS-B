@@ -3,10 +3,20 @@ import { body, query } from "express-validator";
 
 import validateResult from "../../common/helpers/validateHelper";
 
-export const ProgramaValidator = [
+export const CreateProgramaValidator = [
 	body("name").exists().isString().trim().notEmpty(),
 	body("description").exists().isString().trim(),
 	body("sedeId").exists().isString().trim().notEmpty(),
+	body("directorId").exists().isString().trim().notEmpty(),
+
+	(req: Request, res: Response, next: NextFunction) => {
+		validateResult(req, res, next);
+	},
+];
+
+export const UpdateProgramaValidator = [
+	body("name").exists().isString().trim().notEmpty(),
+	body("description").exists().isString().trim(),
 	body("directorId").exists().isString().trim().notEmpty(),
 
 	(req: Request, res: Response, next: NextFunction) => {
