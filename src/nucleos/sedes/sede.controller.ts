@@ -6,14 +6,15 @@ import {
 	getOneSede_service,
 	updateSede_service,
 } from "./sede.service";
-import getSedeDataOfRequest from "./helpers/getSedeData.helper";
 import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { sedeAttributes } from "./models/sede.model";
+import { QuerySedeDto } from "./dto/query-sede.dto";
 
 export const createSede_controller = async (req: Request, res: Response) => {
-	
 	try {
-		const data = getSedeDataOfRequest(req.body);
-		
+		const data = matchedData(req) as Omit<sedeAttributes, "_id" | "status">;
+
 		const sede = await createSede_service(data);
 
 		res.status(201).json({ data: sede });
@@ -22,9 +23,11 @@ export const createSede_controller = async (req: Request, res: Response) => {
 	}
 };
 
-export const getSedes_controller = async (_req: Request, res: Response) => {
+export const getSedes_controller = async (req: Request, res: Response) => {
+	const query = matchedData(req) as QuerySedeDto;
+
 	try {
-		const sedes = await getSedes_service();
+		const sedes = await getSedes_service(query);
 
 		res.status(200).json({ data: sedes });
 	} catch (error) {
@@ -47,8 +50,10 @@ export const getOneSede_controller = async (req: Request, res: Response) => {
 export const updateSede_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
-		const data = getSedeDataOfRequest(req.body);
-
+		const data = matchedData(req) as Omit<
+			sedeAttributes,
+			"_id" | "status" | "nucleoId"
+		>;
 		const sede = await updateSede_service(id, data);
 
 		res.json({ data: sede });

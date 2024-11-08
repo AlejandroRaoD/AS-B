@@ -6,13 +6,18 @@ import {
 	getOneSede_controller,
 	updateSede_controller,
 } from "../sede.controller";
+import {
+	QuerySedeValidator,
+	SedeValidator,
+	UpdateSedeValidator,
+} from "../validators/sede.validator";
 
 const router = express.Router();
 
-router.post("/", createSede_controller);
-router.get("/", getSedes_controller);
+router.post("/", SedeValidator, createSede_controller);
+router.get("/", QuerySedeValidator, getSedes_controller);
 router.get("/:id", getOneSede_controller);
-router.put("/:id", updateSede_controller);
+router.put("/:id", UpdateSedeValidator, updateSede_controller);
 router.delete("/:id", deleteSede_controller);
 
 export default router;

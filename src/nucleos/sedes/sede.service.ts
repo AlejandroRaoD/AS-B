@@ -43,7 +43,7 @@ export const getOneSede_service = async (
 
 export const updateSede_service = async (
 	_id: string,
-	data: Omit<sedeAttributes, "_id" | "status">
+	data: Omit<sedeAttributes, "_id" | "status" | "nucleoId">
 ): Promise<sede_from_DB> => {
 	const { name, address, phone_number } = data;
 
