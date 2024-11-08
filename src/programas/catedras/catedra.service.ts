@@ -1,73 +1,75 @@
-import { ErrorMsg } from "../../config/messages";
+import { NotFoundException } from "../../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../../config/messages";
+import { CreateCatedraDto } from "./dto/create-catedra.dto";
+import { QueryCatedraDto } from "./dto/query-catedra.dto";
+import { UpdateCatedraDto } from "./dto/update-catedra.dto";
 import catedraModel, {
-	catedraAttributes,
+	catedraStatus,
 	catedra_from_DB,
 } from "./models/catedra.model";
 
 export const createCatedra_service = async (
-	data: catedraAttributes
+	createCatedraDto: CreateCatedraDto
 ): Promise<catedra_from_DB> => {
-	try {
-		const catedra = new catedraModel(data);
+	const catedra = new catedraModel(createCatedraDto);
 
-		await catedra.save();
+	await catedra.save();
 
-		return catedra;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.catedra.notCreated);
-	}
+	return catedra;
 };
 
-export const getCatedras_service = async (): Promise<catedra_from_DB[]> => {
-	try {
-		const catedras = await catedraModel.find();
+export const getCatedras_service = async (
+	queryCatedraDto: QueryCatedraDto
+): Promise<catedra_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryCatedraDto;
 
-		return catedras;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.catedra.whenObtaining);
-	}
+	const catedras = await catedraModel
+		.find(query)
+		.skip(skip)
+		.limit(limit)
+		.sort("name");
+
+	return catedras;
 };
 
 export const getOneCatedra_service = async (
-	_id: string
+	id: string
 ): Promise<catedra_from_DB> => {
-	try {
-		const catedra = await catedraModel.findById(_id);
+	const catedra = await catedraModel.findById(id);
 
-		return catedra;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.catedra.whenObtaining);
-	}
+	if (!catedra)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.catedra));
+
+	return catedra;
 };
 
 export const updateCatedra_service = async (
-	_id: string,
-	data: catedraAttributes
+	id: string,
+	updateCatedraDto: UpdateCatedraDto
 ): Promise<catedra_from_DB> => {
-	try {
-		await catedraModel.updateOne({ _id }, data);
+	const catedra = await catedraModel.findOneAndUpdate(
+		{ _id: id },
+		updateCatedraDto,
+		{ new: true }
+	);
 
-		const catedra = catedraModel.findById(_id);
+	if (!catedra)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.catedra));
 
-		return catedra;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.catedra.whenObtaining);
-	}
+	return catedra;
 };
 
-export const deleteCatedra_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await catedraModel.deleteOne({ _id });
+export const deleteCatedra_service = async (
+	id: string
+): Promise<catedra_from_DB> => {
+	const catedra = await catedraModel.findOneAndUpdate(
+		{ _id: id },
+		{ status: catedraStatus.delete },
+		{ new: true }
+	);
 
-		console.log(result);
+	if (!catedra)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.catedra));
 
-		if (!result.deletedCount) throw new Error(ErrorMsg.catedra.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.catedra.whenObtaining);
-	}
+	return catedra;
 };

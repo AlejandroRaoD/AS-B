@@ -1,10 +1,17 @@
 import mongoose, { Document } from "mongoose";
 
+export enum catedraStatus {
+	active = "a",
+	inArchive = "ar",
+	delete = "d",
+}
+
 export interface catedraAttributes {
 	_id: string;
 	programaId: string;
 	name: string;
 	description: string;
+	status: catedraStatus;
 }
 
 export interface catedra_from_DB
@@ -19,6 +26,7 @@ const CatedraSchema = new mongoose.Schema({
 		ref: "Programa",
 		require: true,
 	},
+	status: { type: String, trim: true, default: catedraStatus.active },
 });
 
 export default mongoose.model<catedra_from_DB>("Catedra", CatedraSchema);

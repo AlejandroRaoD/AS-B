@@ -6,15 +6,17 @@ import {
 	getOneCatedra_service,
 	updateCatedra_service,
 } from "./catedra.service";
-import getCatedraDataOfRequest from "./helpers/getCatedraData.helper";
-import { ErrorMsg } from "../../config/messages";
 import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { CreateCatedraDto } from "./dto/create-catedra.dto";
+import { QueryCatedraDto } from "./dto/query-catedra.dto";
+import { UpdateCatedraDto } from "./dto/update-catedra.dto";
 
 export const createCatedra_controller = async (req: Request, res: Response) => {
-	const data = getCatedraDataOfRequest(req.body);
-
 	try {
-		const catedra = await createCatedra_service(data);
+		const createCatedraDto = matchedData(req) as CreateCatedraDto;
+
+		const catedra = await createCatedra_service(createCatedraDto);
 
 		res.status(201).json({ data: catedra });
 	} catch (error) {
@@ -22,11 +24,10 @@ export const createCatedra_controller = async (req: Request, res: Response) => {
 	}
 };
 
-export const getCatedras_controller = async (_req: Request, res: Response) => {
-	// const query = req.query
-
+export const getCatedras_controller = async (req: Request, res: Response) => {
 	try {
-		const catedras = await getCatedras_service();
+		const queryCatedraDto = matchedData(req) as QueryCatedraDto;
+		const catedras = await getCatedras_service(queryCatedraDto);
 
 		res.status(200).json({ data: catedras });
 	} catch (error) {
@@ -35,10 +36,9 @@ export const getCatedras_controller = async (_req: Request, res: Response) => {
 };
 
 export const getOneCatedra_controller = async (req: Request, res: Response) => {
-	const { id: _id } = req.params;
-
 	try {
-		const catedra = await getOneCatedra_service(_id);
+		const { id } = req.params;
+		const catedra = await getOneCatedra_service(id);
 
 		res.status(200).json({ data: catedra });
 	} catch (error) {
@@ -48,32 +48,25 @@ export const getOneCatedra_controller = async (req: Request, res: Response) => {
 
 export const updateCatedra_controller = async (req: Request, res: Response) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getCatedraDataOfRequest(req.body);
+		const { id } = req.params;
+		const updateCatedraDto = matchedData(req) as UpdateCatedraDto;
 
-		const catedra = await updateCatedra_service(_id, data);
+		const catedra = await updateCatedra_service(id, updateCatedraDto);
 
 		res.json({ data: catedra });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.catedra.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
 export const deleteCatedra_controller = async (req: Request, res: Response) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteCatedra_service(_id);
+		const catedra = await deleteCatedra_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: catedra });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.catedra.delete });
+		errorHandlerHelper(error, res);
 	}
 };
