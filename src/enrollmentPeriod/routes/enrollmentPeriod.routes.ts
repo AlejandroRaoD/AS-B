@@ -6,13 +6,34 @@ import {
 	getOneEnrollmentPeriod_controller,
 	updateEnrollmentPeriod_controller,
 } from "../enrollmentPeriod.controller";
+import {
+	CreateEnrollmentPeriodValidator,
+	QueryEnrollmentPeriodValidator,
+	UpdateEnrollmentPeriodValidator,
+} from "../validators/enrollmentPeriod.validator";
 
 const router = express.Router();
 
-router.post("/", createEnrollmentPeriod_controller);
-router.get("/", getEnrollmentPeriods_controller);
+router.post(
+	"/",
+	CreateEnrollmentPeriodValidator,
+	createEnrollmentPeriod_controller
+);
+
+router.get(
+	"/",
+	QueryEnrollmentPeriodValidator,
+	getEnrollmentPeriods_controller
+);
+
 router.get("/:id", getOneEnrollmentPeriod_controller);
-router.put("/:id", updateEnrollmentPeriod_controller);
+
+router.put(
+	"/:id",
+	UpdateEnrollmentPeriodValidator,
+	updateEnrollmentPeriod_controller
+);
+
 router.delete("/:id", deleteEnrollmentPeriod_controller);
 
 export default router;

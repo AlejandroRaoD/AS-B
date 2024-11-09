@@ -1,9 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
+
+export enum EnrollmentPeriodStatus {
+	active = "a",
+	inArchive = "ar",
+	delete = "d",
+}
 
 export interface enrollmentPeriodAttributes {
 	_id: string;
 	year: Number;
 	step: Number;
+	status: EnrollmentPeriodStatus;
 }
 
 export interface enrollmentPeriod_from_DB
@@ -13,6 +20,7 @@ export interface enrollmentPeriod_from_DB
 const EnrollmentPeriodSchema = new mongoose.Schema({
 	year: { type: Number, require: true, default: new Date().getFullYear() },
 	step: { type: Number, require: true, default: 1 },
+	status: { type: String, trim: true, default: EnrollmentPeriodStatus.active },
 });
 
 export default mongoose.model<enrollmentPeriod_from_DB>(
