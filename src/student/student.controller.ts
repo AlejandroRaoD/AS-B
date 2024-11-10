@@ -6,15 +6,16 @@ import {
 	getOneStudent_service,
 	updateStudent_service,
 } from "./student.service";
-import getStudentDataOfRequest from "./helpers/getStudentData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { CreateStudentDto } from "./dto/create-student.dto";
+import { QueryStudentDto } from "./dto/query-student.dto";
+import { UpdateStudentDto } from "./dto/update-student.dto";
 
 export const createStudent_controller = async (req: Request, res: Response) => {
-	const data = getStudentDataOfRequest(req.body);
-
 	try {
-		const student = await createStudent_service(data);
+		const createStudentDto = matchedData(req) as CreateStudentDto;
+		const student = await createStudent_service(createStudentDto);
 
 		res.status(201).json({ data: student });
 	} catch (error) {
@@ -22,11 +23,11 @@ export const createStudent_controller = async (req: Request, res: Response) => {
 	}
 };
 
-export const getStudents_controller = async (_req: Request, res: Response) => {
-	// const query = req.query
-
+export const getStudents_controller = async (req: Request, res: Response) => {
 	try {
-		const students = await getStudents_service();
+		const query = matchedData(req) as QueryStudentDto;
+
+		const students = await getStudents_service(query);
 
 		res.status(200).json({ data: students });
 	} catch (error) {
@@ -35,10 +36,9 @@ export const getStudents_controller = async (_req: Request, res: Response) => {
 };
 
 export const getOneStudent_controller = async (req: Request, res: Response) => {
-	const { id: _id } = req.params;
-
 	try {
-		const student = await getOneStudent_service(_id);
+		const { id } = req.params;
+		const student = await getOneStudent_service(id);
 
 		res.status(200).json({ data: student });
 	} catch (error) {
@@ -48,32 +48,25 @@ export const getOneStudent_controller = async (req: Request, res: Response) => {
 
 export const updateStudent_controller = async (req: Request, res: Response) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getStudentDataOfRequest(req.body);
+		const { id } = req.params;
+		const updateStudentDto = matchedData(req) as UpdateStudentDto;
 
-		const student = await updateStudent_service(_id, data);
+		const student = await updateStudent_service(id, updateStudentDto);
 
 		res.json({ data: student });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.student.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
 export const deleteStudent_controller = async (req: Request, res: Response) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteStudent_service(_id);
+		const student = await deleteStudent_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: student });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.student.delete });
+		errorHandlerHelper(error, res);
 	}
 };

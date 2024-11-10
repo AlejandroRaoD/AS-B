@@ -7,7 +7,6 @@ import { CreateEnrollmentPeriodDto } from "./dtos/create-enrollment-perid.dto";
 import { QueryEnrollmentPeriodDto } from "./dtos/query-enrollment-perid.dto";
 import { UpdateEnrollmentPeriodDto } from "./dtos/update-enrollment-perid.dto";
 import enrollmentPeriodModel, {
-	enrollmentPeriodAttributes,
 	enrollmentPeriod_from_DB,
 } from "./models/enrollmentPeriod.model";
 

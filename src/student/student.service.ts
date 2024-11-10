@@ -1,73 +1,73 @@
-import { ErrorMsg } from "../config/messages";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateStudentDto } from "./dto/create-student.dto";
+import { QueryStudentDto } from "./dto/query-student.dto";
+import { UpdateStudentDto } from "./dto/update-student.dto";
 import studentModel, {
-	studentAttributes,
+	StudentStatus,
 	student_from_DB,
 } from "./models/student.model";
 
 export const createStudent_service = async (
-	data: studentAttributes
+	createStudentDto: CreateStudentDto
 ): Promise<student_from_DB> => {
-	try {
-		const student = new studentModel(data);
+	const student = new studentModel(createStudentDto);
 
-		await student.save();
+	await student.save();
 
-		return student;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.student.notCreated);
-	}
+	return student;
 };
 
-export const getStudents_service = async (): Promise<student_from_DB[]> => {
-	try {
-		const students = await studentModel.find();
+export const getStudents_service = async (
+	queryStudentDto: QueryStudentDto
+): Promise<student_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryStudentDto;
 
-		return students;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.student.whenObtaining);
-	}
+	const students = await studentModel
+		.find(query)
+		.skip(skip)
+		.limit(limit)
+		.sort("name");
+
+	return students;
 };
 
 export const getOneStudent_service = async (
-	_id: string
+	id: string
 ): Promise<student_from_DB> => {
-	try {
-		const student = await studentModel.findById(_id);
+	const student = await studentModel.findById(id);
 
-		return student;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.student.whenObtaining);
-	}
+	if (!student)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.student));
+
+	return student;
 };
 
 export const updateStudent_service = async (
-	_id: string,
-	data: studentAttributes
+	id: string,
+	updateStudentDto: UpdateStudentDto
 ): Promise<student_from_DB> => {
-	try {
-		await studentModel.updateOne({ _id }, data);
+	const student = studentModel.findOneAndUpdate({ _id: id }, updateStudentDto, {
+		new: true,
+	});
 
-		const student = studentModel.findById(_id);
+	if (!student)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.student));
 
-		return student;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.student.whenObtaining);
-	}
+	return student;
 };
 
-export const deleteStudent_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await studentModel.deleteOne({ _id });
+export const deleteStudent_service = async (
+	id: string
+): Promise<student_from_DB> => {
+	const student = await studentModel.findOneAndUpdate(
+		{ _id: id },
+		{ status: StudentStatus.delete },
+		{ new: true }
+	);
 
-		console.log(result);
+	if (!student)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.programa));
 
-		if (!result.deletedCount) throw new Error(ErrorMsg.student.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.student.whenObtaining);
-	}
+	return student;
 };
