@@ -53,7 +53,7 @@ export const getOneNucleo_service = async (
 		? await nucleoModel.findById(term)
 		: await nucleoModel.findOne({ name: term });
 
-	if (nucleo)
+	if (!nucleo)
 		throw new NotFoundException(ErrorMsg.notFound(moduleItems.nucleo));
 
 	return nucleo;
