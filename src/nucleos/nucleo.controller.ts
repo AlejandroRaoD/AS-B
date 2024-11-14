@@ -64,9 +64,10 @@ export const deleteNucleo_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
 
-		const nucleo = await deleteNucleo_service(id);
+		// const nucleo =
+		 await deleteNucleo_service(id);
 
-		res.json({ data: nucleo });
+		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);
 	}

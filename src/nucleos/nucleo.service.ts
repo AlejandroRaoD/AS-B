@@ -4,7 +4,6 @@ import { ErrorMsg, moduleItems } from "../config/messages";
 import nucleoModel, {
 	nucleo_from_DB,
 	nucleoAttributes,
-	nucleoStatus,
 } from "./models/nucleo.model";
 
 import {
@@ -20,13 +19,9 @@ export const createNucleo_service = async (
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
 
-	try {
-		const exist = await getOneNucleo_service(name);
-		if (exist)
-			throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
-	} catch (error) {
-		console.log(error);
-	}
+	const exist = await existOtherNucleo_service(name);
+	if (exist)
+		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
 
 	const nucleo = new nucleoModel(data);
 
@@ -62,14 +57,26 @@ export const getOneNucleo_service = async (
 	return nucleo;
 };
 
+export const existOtherNucleo_service = async (
+	term: string,
+	compareId?: string
+) => {
+	try {
+		let exist = await getOneNucleo_service(term);
+
+		return compareId ? (exist._id != compareId ? true : false) : true;
+	} catch (error) {}
+
+	return false;
+};
+
 export const updateNucleo_service = async (
 	id: string,
 	data: Omit<nucleoAttributes, "_id" | "status">
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
 
-	const exist = await getOneNucleo_service(name);
-
+	const exist = await existOtherNucleo_service(name, id);
 	if (exist)
 		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
 
@@ -82,22 +89,22 @@ export const updateNucleo_service = async (
 	return nucleo;
 };
 
-export const deleteNucleo_service = async (
-	id: string
-): Promise<nucleo_from_DB> => {
+export const deleteNucleo_service = async (id: string): Promise<void> => {
 	const hasSedes = await getSedes_service({ nucleoId: id, skip: 0, limit: 1 });
 
 	if (hasSedes.length)
 		throw new BadRequestException(ErrorMsg.hasDependencies(moduleItems.nucleo));
 
-	const nucleo = await nucleoModel.findOneAndUpdate(
-		{ _id: id },
-		{ status: nucleoStatus.delete },
-		{ new: true }
-	);
+	await nucleoModel.findOneAndDelete({ _id: id });
 
-	if (!nucleo)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.nucleo));
+	// const nucleo = await nucleoModel.findOneAndUpdate(
+	// 	{ _id: id },
+	// 	{ status: nucleoStatus.delete },
+	// 	{ new: true }
+	// );
 
-	return nucleo;
+	// if (!nucleo)
+	// 	throw new NotFoundException(ErrorMsg.notFound(moduleItems.nucleo));
+
+	// return nucleo;
 };
