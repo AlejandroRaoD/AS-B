@@ -20,10 +20,13 @@ export const createNucleo_service = async (
 ): Promise<nucleo_from_DB> => {
 	const { name } = data;
 
-	const exist = await getOneNucleo_service(name);
-
-	if (exist)
-		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
+	try {
+		const exist = await getOneNucleo_service(name);
+		if (exist)
+			throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
+	} catch (error) {
+		console.log(error);
+	}
 
 	const nucleo = new nucleoModel(data);
 
