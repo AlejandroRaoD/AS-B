@@ -5,7 +5,7 @@ import validateResult from "../../../common/helpers/validateHelper";
 export const SedeValidator = [
 	body("name").exists().isString().trim().notEmpty(),
 	body("address").exists().isString().trim().notEmpty(),
-	body("phone_number").exists().isString().trim().notEmpty(),
+	body("phone_number.*").exists().isString().trim().notEmpty(),
 	body("nucleoId").exists().isString().trim().notEmpty(),
 
 	(req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +16,7 @@ export const SedeValidator = [
 export const UpdateSedeValidator = [
 	body("name").optional().isString().trim().notEmpty(),
 	body("address").optional().isString().trim().notEmpty(),
-	body("phone_number").optional().isString().trim().notEmpty(),
+	body("phone_number.*").optional().isString().trim().notEmpty(),
 
 	(req: Request, res: Response, next: NextFunction) => {
 		validateResult(req, res, next);
