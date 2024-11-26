@@ -29,8 +29,14 @@ export const getStudents_service = async (
 ): Promise<student_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryStudentDto;
 
+	const formatedQuery = {
+		...query,
+		name: query.name ? new RegExp(`${query.name }`, "i") : new RegExp(``, "i"),
+		// phone_number:[que]
+	};
+
 	const students = await studentModel
-		.find(query)
+		.find(formatedQuery)
 		.skip(skip)
 		.limit(limit)
 		.sort("name");
