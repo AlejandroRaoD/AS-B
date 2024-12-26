@@ -4,7 +4,6 @@ import { CreateCatedraDto } from "./dto/create-catedra.dto";
 import { QueryCatedraDto } from "./dto/query-catedra.dto";
 import { UpdateCatedraDto } from "./dto/update-catedra.dto";
 import catedraModel, {
-	catedraStatus,
 	catedra_from_DB,
 } from "./models/catedra.model";
 
@@ -25,8 +24,8 @@ export const getCatedras_service = async (
 
 	const catedras = await catedraModel
 		.find(query)
-		.skip(skip)
-		.limit(limit)
+		// .skip(skip)
+		// .limit(limit)
 		.sort("name");
 
 	return catedras;
@@ -59,17 +58,6 @@ export const updateCatedra_service = async (
 	return catedra;
 };
 
-export const deleteCatedra_service = async (
-	id: string
-): Promise<catedra_from_DB> => {
-	const catedra = await catedraModel.findOneAndUpdate(
-		{ _id: id },
-		{ status: catedraStatus.delete },
-		{ new: true }
-	);
-
-	if (!catedra)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.catedra));
-
-	return catedra;
+export const deleteCatedra_service = async (id: string): Promise<void> => {
+	await catedraModel.deleteOne({ _id: id });
 };

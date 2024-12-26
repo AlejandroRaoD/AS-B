@@ -19,9 +19,11 @@ export const createRepresentative_service = async (
 	}
 };
 
-export const getRepresentatives_service = async (): Promise<representative_from_DB[]> => {
+export const getRepresentatives_service = async (): Promise<
+	representative_from_DB[]
+> => {
 	try {
-		const representatives = await representativeModel.find();
+		const representatives = await representativeModel.find().sort("name");
 
 		return representatives;
 	} catch (error) {
@@ -59,11 +61,11 @@ export const updateRepresentative_service = async (
 	}
 };
 
-export const deleteRepresentative_service = async (_id: string): Promise<void> => {
+export const deleteRepresentative_service = async (
+	_id: string
+): Promise<void> => {
 	try {
 		const result = await representativeModel.deleteOne({ _id });
-
-		console.log(result);
 
 		if (!result.deletedCount) throw new Error(ErrorMsg.representative.notFound);
 	} catch (error) {

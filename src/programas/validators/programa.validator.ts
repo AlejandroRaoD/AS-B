@@ -7,7 +7,7 @@ export const CreateProgramaValidator = [
 	body("name").exists().isString().trim().notEmpty(),
 	body("description").exists().isString().trim(),
 	body("sedeId").exists().isString().trim().notEmpty(),
-	body("directorId").exists().isString().trim().notEmpty(),
+	body("directorId").exists().isString().trim().notEmpty().isMongoId(),
 
 	(req: Request, res: Response, next: NextFunction) => {
 		validateResult(req, res, next);
@@ -15,9 +15,9 @@ export const CreateProgramaValidator = [
 ];
 
 export const UpdateProgramaValidator = [
-	body("name").exists().isString().trim().notEmpty(),
-	body("description").exists().isString().trim(),
-	body("directorId").exists().isString().trim().notEmpty(),
+	body("name").optional().isString().trim().notEmpty(),
+	body("description").optional().isString().trim(),
+	body("directorId").optional().isString().trim().notEmpty(),
 
 	(req: Request, res: Response, next: NextFunction) => {
 		validateResult(req, res, next);

@@ -20,6 +20,7 @@ export const createNucleo_service = async (
 	const { name } = data;
 
 	const exist = await existOtherNucleo_service(name);
+	
 	if (exist)
 		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
 

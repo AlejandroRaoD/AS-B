@@ -101,7 +101,10 @@ export const getStudentRelations_service = async (
 ): Promise<studentRelation_from_DB[]> => {
 	const { ...query } = QueryStudentRelationDto;
 
-	const relations = await studentRelationModel.find(query);
+	const relations = await studentRelationModel
+		.find(query)
+		.populate("representativeId")
+		.populate("studentId");
 
 	return relations;
 };

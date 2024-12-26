@@ -76,9 +76,9 @@ export const deletePrograma_controller = async (
 	try {
 		const { id } = req.params;
 
-		const program = await deletePrograma_service(id);
+		await deletePrograma_service(id);
 
-		res.json({ data: program });
+		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);
 	}

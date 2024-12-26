@@ -27,6 +27,7 @@ export const createCatedra_controller = async (req: Request, res: Response) => {
 export const getCatedras_controller = async (req: Request, res: Response) => {
 	try {
 		const queryCatedraDto = matchedData(req) as QueryCatedraDto;
+
 		const catedras = await getCatedras_service(queryCatedraDto);
 
 		res.status(200).json({ data: catedras });
@@ -49,6 +50,7 @@ export const getOneCatedra_controller = async (req: Request, res: Response) => {
 export const updateCatedra_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
+
 		const updateCatedraDto = matchedData(req) as UpdateCatedraDto;
 
 		const catedra = await updateCatedra_service(id, updateCatedraDto);
@@ -63,9 +65,9 @@ export const deleteCatedra_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
 
-		const catedra = await deleteCatedra_service(id);
+		await deleteCatedra_service(id);
 
-		res.json({ data: catedra });
+		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);
 	}
