@@ -1,73 +1,70 @@
-import { ErrorMsg } from "../config/messages";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateStudentEnrollmentDto } from "./dto/create-student-Enrollment.dto";
+import { QueryStudentEnrollmentDto } from "./dto/query-student.dto";
+import { UpdateStudentEnrollmentDto } from "./dto/update-student.dto";
 import studentEnrollmentModel, {
-	studentEnrollmentAttributes,
 	studentEnrollment_from_DB,
 } from "./models/studentEnrollment.model";
 
 export const createStudentEnrollment_service = async (
-	data: studentEnrollmentAttributes
+	data: CreateStudentEnrollmentDto
 ): Promise<studentEnrollment_from_DB> => {
-	try {
-		const studentEnrollment = new studentEnrollmentModel(data);
+	const studentEnrollment = new studentEnrollmentModel(data);
 
-		await studentEnrollment.save();
+	await studentEnrollment.save();
 
-		return studentEnrollment;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.studentEnrollment.notCreated);
-	}
+	return studentEnrollment;
 };
 
-export const getStudentEnrollments_service = async (): Promise<studentEnrollment_from_DB[]> => {
-	try {
-		const studentEnrollments = await studentEnrollmentModel.find();
+export const getStudentEnrollments_service = async (
+	queryStudentEnrollmentDto: QueryStudentEnrollmentDto
+): Promise<studentEnrollment_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryStudentEnrollmentDto;
 
-		return studentEnrollments;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
-	}
+	const enrollments = await studentEnrollmentModel.find(query);
+
+	return enrollments;
 };
 
 export const getOneStudentEnrollment_service = async (
 	_id: string
 ): Promise<studentEnrollment_from_DB> => {
-	try {
-		const studentEnrollment = await studentEnrollmentModel.findById(_id);
+	const studentEnrollment = await studentEnrollmentModel.findById(_id);
 
-		return studentEnrollment;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
-	}
+	if (!studentEnrollment)
+		throw new NotFoundException(
+			ErrorMsg.notFound(moduleItems.studentEnrollment)
+		);
+
+	return studentEnrollment;
 };
 
 export const updateStudentEnrollment_service = async (
 	_id: string,
-	data: studentEnrollmentAttributes
+	data: UpdateStudentEnrollmentDto
 ): Promise<studentEnrollment_from_DB> => {
-	try {
-		await studentEnrollmentModel.updateOne({ _id }, data);
+	const studentEnrollment = await studentEnrollmentModel.findOneAndUpdate(
+		{ _id },
+		data,
+		{ new: true }
+	);
 
-		const studentEnrollment = studentEnrollmentModel.findById(_id);
+	if (!studentEnrollment)
+		throw new NotFoundException(
+			ErrorMsg.notFound(moduleItems.studentEnrollment)
+		);
 
-		return studentEnrollment;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
-	}
+	return studentEnrollment;
 };
 
-export const deleteStudentEnrollment_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await studentEnrollmentModel.deleteOne({ _id });
+export const deleteStudentEnrollment_service = async (
+	_id: string
+): Promise<void> => {
+	const result = await studentEnrollmentModel.deleteOne({ _id });
 
-		console.log(result);
-
-		if (!result.deletedCount) throw new Error(ErrorMsg.studentEnrollment.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.studentEnrollment.whenObtaining);
-	}
+	if (!result.deletedCount)
+		throw new NotFoundException(
+			ErrorMsg.notFound(moduleItems.studentEnrollment)
+		);
 };

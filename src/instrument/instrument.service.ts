@@ -1,73 +1,60 @@
-import { ErrorMsg } from "../config/messages";
-import instrumentModel, {
-	instrumentAttributes,
-	instrument_from_DB,
-} from "./models/instrument.model";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateInstrumentDto } from "./dto/create-instrument.dto";
+import { QueryInstrumentDto } from "./dto/query-instrument.dto";
+import { UpdateInstrumentDto } from "./dto/update-instrument.dto";
+import instrumentModel, { instrument_from_DB } from "./models/instrument.model";
 
 export const createInstrument_service = async (
-	data: instrumentAttributes
+	createInstrumentDto: CreateInstrumentDto
 ): Promise<instrument_from_DB> => {
-	try {
-		const instrument = new instrumentModel(data);
+	const instrument = new instrumentModel(createInstrumentDto);
 
-		await instrument.save();
+	await instrument.save();
 
-		return instrument;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.instrument.notCreated);
-	}
+	return instrument;
 };
 
-export const getInstruments_service = async (): Promise<instrument_from_DB[]> => {
-	try {
-		const instruments = await instrumentModel.find();
+export const getInstruments_service = async (
+	queryInstrumentDto: QueryInstrumentDto
+): Promise<instrument_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryInstrumentDto;
 
-		return instruments;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.instrument.whenObtaining);
-	}
+	const instruments = await instrumentModel.find(query);
+
+	return instruments;
 };
 
 export const getOneInstrument_service = async (
-	_id: string
+	id: string
 ): Promise<instrument_from_DB> => {
-	try {
-		const instrument = await instrumentModel.findById(_id);
+	const instrument = await instrumentModel.findById(id);
 
-		return instrument;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.instrument.whenObtaining);
-	}
+	if (!instrument)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.instrument));
+
+	return instrument;
 };
 
 export const updateInstrument_service = async (
-	_id: string,
-	data: instrumentAttributes
+	id: string,
+	updateInstrumentDto: UpdateInstrumentDto
 ): Promise<instrument_from_DB> => {
-	try {
-		await instrumentModel.updateOne({ _id }, data);
+	const instrument = await instrumentModel.findByIdAndUpdate(
+		id,
+		updateInstrumentDto,
+		{ new: true }
+	);
 
-		const instrument = instrumentModel.findById(_id);
+	if (!instrument)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.instrument));
 
-		return instrument;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.instrument.whenObtaining);
-	}
+	return instrument;
 };
 
 export const deleteInstrument_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await instrumentModel.deleteOne({ _id });
+	const result = await instrumentModel.deleteOne({ _id });
 
-		console.log(result);
-
-		if (!result.deletedCount) throw new Error(ErrorMsg.instrument.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.instrument.whenObtaining);
-	}
+	if (!result.deletedCount)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.instrument));
 };

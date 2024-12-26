@@ -6,10 +6,7 @@ import { QueryStudentRelationDto } from "./dto/query-student-relation.dto";
 import { QueryStudentDto } from "./dto/query-student.dto";
 import { UpdateStudentRelationDto } from "./dto/update-student-relation.dto";
 import { UpdateStudentDto } from "./dto/update-student.dto";
-import studentModel, {
-	StudentStatus,
-	student_from_DB,
-} from "./models/student.model";
+import studentModel, { student_from_DB } from "./models/student.model";
 import studentRelationModel, {
 	studentRelation_from_DB,
 } from "./models/studentRelation.model";
@@ -69,19 +66,8 @@ export const updateStudent_service = async (
 	return student;
 };
 
-export const deleteStudent_service = async (
-	id: string
-): Promise<student_from_DB> => {
-	const student = await studentModel.findOneAndUpdate(
-		{ _id: id },
-		{ status: StudentStatus.delete },
-		{ new: true }
-	);
-
-	if (!student)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.programa));
-
-	return student;
+export const deleteStudent_service = async (id: string): Promise<void> => {
+	await studentModel.deleteOne({ _id: id });
 };
 
 // relacionar con representante

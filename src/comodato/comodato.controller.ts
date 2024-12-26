@@ -6,15 +6,17 @@ import {
 	getOneComodato_service,
 	updateComodato_service,
 } from "./comodato.service";
-import getComodatoDataOfRequest from "./helpers/getComodatoData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { CreateComodatoDto } from "./dto/create-comodato.dto";
+import { QueryComodatoDto } from "./dto/query-comodato.dto";
+import { UpdateComodatoDto } from "./dto/update-comodato.dto";
 
 export const createComodato_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getComodatoDataOfRequest(req.body);
+	const data = matchedData(req) as CreateComodatoDto;
 
 	try {
 		const comodato = await createComodato_service(data);
@@ -25,11 +27,11 @@ export const createComodato_controller = async (
 	}
 };
 
-export const getComodatos_controller = async (_req: Request, res: Response) => {
-	// const query = req.query
+export const getComodatos_controller = async (req: Request, res: Response) => {
+	const query = matchedData(req) as QueryComodatoDto;
 
 	try {
-		const comodatos = await getComodatos_service();
+		const comodatos = await getComodatos_service(query);
 
 		res.status(200).json({ data: comodatos });
 	} catch (error) {
@@ -41,10 +43,10 @@ export const getOneComodato_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const comodato = await getOneComodato_service(_id);
+		const comodato = await getOneComodato_service(id);
 
 		res.status(200).json({ data: comodato });
 	} catch (error) {
@@ -57,17 +59,14 @@ export const updateComodato_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getComodatoDataOfRequest(req.body);
+		const { id } = req.params;
+		const data = matchedData(req) as UpdateComodatoDto;
 
-		const comodato = await updateComodato_service(_id, data);
+		const comodato = await updateComodato_service(id, data);
 
 		res.json({ data: comodato });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.comodato.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -76,16 +75,12 @@ export const deleteComodato_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteComodato_service(_id);
+		await deleteComodato_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: "ok" });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.comodato.delete });
+		errorHandlerHelper(error, res);
 	}
 };

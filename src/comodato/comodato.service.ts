@@ -1,73 +1,58 @@
-import { ErrorMsg } from "../config/messages";
-import comodatoModel, {
-	ComodatoAttributes,
-	comodato_from_DB,
-} from "./models/comodato.model";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateComodatoDto } from "./dto/create-comodato.dto";
+import { QueryComodatoDto } from "./dto/query-comodato.dto";
+import { UpdateComodatoDto } from "./dto/update-comodato.dto";
+import comodatoModel, { comodato_from_DB } from "./models/comodato.model";
 
 export const createComodato_service = async (
-	data: ComodatoAttributes
+	data: CreateComodatoDto
 ): Promise<comodato_from_DB> => {
-	try {
-		const comodato = new comodatoModel(data);
+	const comodato = new comodatoModel(data);
 
-		await comodato.save();
+	await comodato.save();
 
-		return comodato;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.comodato.notCreated);
-	}
+	return comodato;
 };
 
-export const getComodatos_service = async (): Promise<comodato_from_DB[]> => {
-	try {
-		const comodatos = await comodatoModel.find();
+export const getComodatos_service = async (
+	queryComodatoDto: QueryComodatoDto
+): Promise<comodato_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryComodatoDto;
 
-		return comodatos;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.comodato.whenObtaining);
-	}
+	const comodatos = await comodatoModel.find(query);
+
+	return comodatos;
 };
 
 export const getOneComodato_service = async (
-	_id: string
+	id: string
 ): Promise<comodato_from_DB> => {
-	try {
-		const comodato = await comodatoModel.findById(_id);
+	const comodato = await comodatoModel.findById(id);
 
-		return comodato;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.comodato.whenObtaining);
-	}
+	if (!comodato)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.comodato));
+
+	return comodato;
 };
 
 export const updateComodato_service = async (
-	_id: string,
-	data: ComodatoAttributes
+	id: string,
+	data: UpdateComodatoDto
 ): Promise<comodato_from_DB> => {
-	try {
-		await comodatoModel.updateOne({ _id }, data);
+	const comodato = await comodatoModel.findByIdAndUpdate(id, data, {
+		new: true,
+	});
 
-		const comodato = comodatoModel.findById(_id);
+	if (!comodato)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.comodato));
 
-		return comodato;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.comodato.whenObtaining);
-	}
+	return comodato;
 };
 
 export const deleteComodato_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await comodatoModel.deleteOne({ _id });
+	const result = await comodatoModel.deleteOne({ _id });
 
-		console.log(result);
-
-		if (!result.deletedCount) throw new Error(ErrorMsg.comodato.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.comodato.whenObtaining);
-	}
+	if (!result.deletedCount)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.comodato));
 };

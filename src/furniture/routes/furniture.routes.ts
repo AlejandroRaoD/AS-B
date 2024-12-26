@@ -6,13 +6,17 @@ import {
 	getOneFurniture_controller,
 	updateFurniture_controller,
 } from "../furniture.controller";
+import {
+	FurnitureValidator,
+	QueryFurnitureValidator,
+} from "../validators/furniture.validator";
 
 const router = express.Router();
 
-router.post("/", createFurniture_controller);
-router.get("/", getFurnitures_controller);
+router.post("/", FurnitureValidator, createFurniture_controller);
+router.get("/", QueryFurnitureValidator, getFurnitures_controller);
 router.get("/:id", getOneFurniture_controller);
-router.put("/:id", updateFurniture_controller);
+router.put("/:id", FurnitureValidator, updateFurniture_controller);
 router.delete("/:id", deleteFurniture_controller);
 
 export default router;

@@ -6,12 +6,14 @@ import {
 	getOneFiam_service,
 	updateFiam_service,
 } from "./fiam.service";
-import getFiamDataOfRequest from "./helpers/getFiamData.helper";
-import { ErrorMsg } from "../../config/messages";
 import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
+import { CreateFiamDto } from "./dto/create-fiam.dto";
+import { matchedData } from "express-validator";
+import { QueryFiamDto } from "./dto/query-fiam.dto";
+import { UpdateFiamDto } from "./dto/update-fiam.dto";
 
 export const createFiam_controller = async (req: Request, res: Response) => {
-	const data = getFiamDataOfRequest(req.body);
+	const data = matchedData(req) as CreateFiamDto;
 
 	try {
 		const fiam = await createFiam_service(data);
@@ -22,11 +24,11 @@ export const createFiam_controller = async (req: Request, res: Response) => {
 	}
 };
 
-export const getFiams_controller = async (_req: Request, res: Response) => {
-	// const query = req.query
+export const getFiams_controller = async (req: Request, res: Response) => {
+	const query = matchedData(req) as QueryFiamDto;
 
 	try {
-		const fiams = await getFiams_service();
+		const fiams = await getFiams_service(query);
 
 		res.status(200).json({ data: fiams });
 	} catch (error) {
@@ -35,10 +37,10 @@ export const getFiams_controller = async (_req: Request, res: Response) => {
 };
 
 export const getOneFiam_controller = async (req: Request, res: Response) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const fiam = await getOneFiam_service(_id);
+		const fiam = await getOneFiam_service(id);
 
 		res.status(200).json({ data: fiam });
 	} catch (error) {
@@ -48,28 +50,25 @@ export const getOneFiam_controller = async (req: Request, res: Response) => {
 
 export const updateFiam_controller = async (req: Request, res: Response) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getFiamDataOfRequest(req.body);
+		const { id } = req.params;
+		const data = matchedData(req) as UpdateFiamDto;
 
-		const fiam = await updateFiam_service(_id, data);
+		const fiam = await updateFiam_service(id, data);
 
 		res.json({ data: fiam });
 	} catch (error) {
-		console.log(error);
-		res.status(500).json({ error: true, message: ErrorMsg.fiam.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
 export const deleteFiam_controller = async (req: Request, res: Response) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteFiam_service(_id);
+		await deleteFiam_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: "ok" });
 	} catch (error) {
-		console.log(error);
-
-		res.status(500).json({ error: true, message: ErrorMsg.fiam.delete });
+		errorHandlerHelper(error, res);
 	}
 };

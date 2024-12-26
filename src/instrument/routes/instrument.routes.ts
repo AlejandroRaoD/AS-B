@@ -6,13 +6,17 @@ import {
 	getOneInstrument_controller,
 	updateInstrument_controller,
 } from "../instrument.controller";
+import {
+	InstrumentValidator,
+	QueryInstrumentValidator,
+} from "../validators/instrument.validator";
 
 const router = express.Router();
 
-router.post("/", createInstrument_controller);
-router.get("/", getInstruments_controller);
+router.post("/", InstrumentValidator, createInstrument_controller);
+router.get("/", QueryInstrumentValidator, getInstruments_controller);
 router.get("/:id", getOneInstrument_controller);
-router.put("/:id", updateInstrument_controller);
+router.put("/:id", InstrumentValidator, updateInstrument_controller);
 router.delete("/:id", deleteInstrument_controller);
 
 export default router;

@@ -1,70 +1,52 @@
-import { ErrorMsg } from "../../config/messages";
-import fiamModel, { fiamAttributes, fiam_from_DB } from "./models/fiam.model";
+import { NotFoundException } from "../../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../../config/messages";
+import { CreateFiamDto } from "./dto/create-fiam.dto";
+import { QueryFiamDto } from "./dto/query-fiam.dto";
+import { UpdateFiamDto } from "./dto/update-fiam.dto";
+import fiamModel, { fiam_from_DB } from "./models/fiam.model";
 
 export const createFiam_service = async (
-	data: fiamAttributes
+	data: CreateFiamDto
 ): Promise<fiam_from_DB> => {
-	try {
-		const fiam = new fiamModel(data);
+	const fiam = new fiamModel(data);
 
-		await fiam.save();
+	await fiam.save();
 
-		return fiam;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.fiam.notCreated);
-	}
+	return fiam;
 };
 
-export const getFiams_service = async (): Promise<fiam_from_DB[]> => {
-	try {
-		const fiams = await fiamModel.find();
+export const getFiams_service = async (
+	queryFiamDto: QueryFiamDto
+): Promise<fiam_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryFiamDto;
 
-		return fiams;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.fiam.whenObtaining);
-	}
+	const fiams = await fiamModel.find(query).sort("catedraId");
+
+	return fiams;
 };
 
-export const getOneFiam_service = async (
-	_id: string
-): Promise<fiam_from_DB> => {
-	try {
-		const fiam = await fiamModel.findById(_id);
+export const getOneFiam_service = async (id: string): Promise<fiam_from_DB> => {
+	const fiam = await fiamModel.findById(id);
 
-		return fiam;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.fiam.whenObtaining);
-	}
+	if (!fiam) throw new NotFoundException(ErrorMsg.notFound(moduleItems.fiam));
+
+	return fiam;
 };
 
 export const updateFiam_service = async (
-	_id: string,
-	data: fiamAttributes
+	id: string,
+	data: UpdateFiamDto
 ): Promise<fiam_from_DB> => {
-	try {
-		await fiamModel.updateOne({ _id }, data);
+	const fiam = await fiamModel.findByIdAndUpdate(id, data, { new: true });
 
-		const fiam = fiamModel.findById(_id);
+	if (!fiam) throw new NotFoundException(ErrorMsg.notFound(moduleItems.fiam));
 
-		return fiam;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.fiam.whenObtaining);
-	}
+	return fiam;
 };
 
-export const deleteFiam_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await fiamModel.deleteOne({ _id });
+export const deleteFiam_service = async (id: string): Promise<void> => {
+	const result = await fiamModel.deleteOne({ _id: id });
 
-		console.log(result);
-
-		if (!result.deletedCount) throw new Error(ErrorMsg.fiam.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.fiam.whenObtaining);
-	}
+	if (!result.deletedCount)
+		throw new Error(ErrorMsg.notFound(moduleItems.fiam));
 };

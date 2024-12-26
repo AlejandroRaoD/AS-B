@@ -6,15 +6,17 @@ import {
 	getOneFurniture_service,
 	updateFurniture_service,
 } from "./furniture.service";
-import getFurnitureDataOfRequest from "./helpers/getFurnitureData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { CreateFurnitureDto } from "./dto/create-furniture.dto";
+import { matchedData } from "express-validator";
+import { QueryFurnitureDto } from "./dto/query-furniture.dto";
+import { UpdateRepresentativeDto } from "../representative/dto/update-student.dto";
 
 export const createFurniture_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getFurnitureDataOfRequest(req.body);
+	const data = matchedData(req) as CreateFurnitureDto;
 
 	try {
 		const furniture = await createFurniture_service(data);
@@ -25,14 +27,11 @@ export const createFurniture_controller = async (
 	}
 };
 
-export const getFurnitures_controller = async (
-	_req: Request,
-	res: Response
-) => {
-	// const query = req.query
+export const getFurnitures_controller = async (req: Request, res: Response) => {
+	const query = matchedData(req) as QueryFurnitureDto;
 
 	try {
-		const furnitures = await getFurnitures_service();
+		const furnitures = await getFurnitures_service(query);
 
 		res.status(200).json({ data: furnitures });
 	} catch (error) {
@@ -60,17 +59,14 @@ export const updateFurniture_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getFurnitureDataOfRequest(req.body);
+		const { id } = req.params;
+		const data = matchedData(req) as UpdateRepresentativeDto;
 
-		const furniture = await updateFurniture_service(_id, data);
+		const furniture = await updateFurniture_service(id, data);
 
 		res.json({ data: furniture });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.furniture.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -79,16 +75,12 @@ export const deleteFurniture_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteFurniture_service(_id);
+		await deleteFurniture_service(id);
 
 		res.json({ ok: true });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.furniture.delete });
+		errorHandlerHelper(error, res);
 	}
 };

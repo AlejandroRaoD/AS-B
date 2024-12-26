@@ -1,73 +1,58 @@
-import { ErrorMsg } from "../config/messages";
-import furnitureModel, {
-	furnitureAttributes,
-	furniture_from_DB,
-} from "./models/furniture.model";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateFurnitureDto } from "./dto/create-furniture.dto";
+import { QueryFurnitureDto } from "./dto/query-furniture.dto";
+import { UpdateFurnitureDto } from "./dto/update-furniture.dto";
+import furnitureModel, { furniture_from_DB } from "./models/furniture.model";
 
 export const createFurniture_service = async (
-	data: furnitureAttributes
+	createFurnitureDto: CreateFurnitureDto
 ): Promise<furniture_from_DB> => {
-	try {
-		const furniture = new furnitureModel(data);
+	const furniture = new furnitureModel(createFurnitureDto);
 
-		await furniture.save();
+	await furniture.save();
 
-		return furniture;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.furniture.notCreated);
-	}
+	return furniture;
 };
 
-export const getFurnitures_service = async (): Promise<furniture_from_DB[]> => {
-	try {
-		const furnitures = await furnitureModel.find();
+export const getFurnitures_service = async (
+	queryFurnitureDto: QueryFurnitureDto
+): Promise<furniture_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryFurnitureDto;
 
-		return furnitures;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.furniture.whenObtaining);
-	}
+	const furnitures = await furnitureModel.find(query);
+
+	return furnitures;
 };
 
 export const getOneFurniture_service = async (
-	_id: string
+	id: string
 ): Promise<furniture_from_DB> => {
-	try {
-		const furniture = await furnitureModel.findById(_id);
+	const furniture = await furnitureModel.findById(id);
 
-		return furniture;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.furniture.whenObtaining);
-	}
+	if (!furniture)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.furniture));
+
+	return furniture;
 };
 
 export const updateFurniture_service = async (
-	_id: string,
-	data: furnitureAttributes
+	id: string,
+	data: UpdateFurnitureDto
 ): Promise<furniture_from_DB> => {
-	try {
-		await furnitureModel.updateOne({ _id }, data);
+	const furniture = await furnitureModel.findByIdAndUpdate(id, data, {
+		new: true,
+	});
 
-		const furniture = furnitureModel.findById(_id);
+	if (!furniture)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.furniture));
 
-		return furniture;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.furniture.whenObtaining);
-	}
+	return furniture;
 };
 
 export const deleteFurniture_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await furnitureModel.deleteOne({ _id });
+	const result = await furnitureModel.deleteOne({ _id });
 
-		console.log(result);
-
-		if (!result.deletedCount) throw new Error(ErrorMsg.furniture.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.furniture.whenObtaining);
-	}
+	if (!result.deletedCount)
+		throw new Error(ErrorMsg.notFound(moduleItems.furniture));
 };

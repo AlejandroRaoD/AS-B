@@ -1,73 +1,61 @@
-import { ErrorMsg } from "../config/messages";
-import employeeModel, {
-	employeeAttributes,
-	employee_from_DB,
-} from "./models/employee.model";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateEmployeeDto } from "./dto/create-employee.dto";
+import { QueryEmployeeDto } from "./dto/query-employee.dto";
+import { UpdateEmployeeDto } from "./dto/update-employee.dto";
+
+import employeeModel, { employee_from_DB } from "./models/employee.model";
 
 export const createEmployee_service = async (
-	data: employeeAttributes
+	data: CreateEmployeeDto
 ): Promise<employee_from_DB> => {
-	try {
-		const employee = new employeeModel(data);
+	const employee = new employeeModel(data);
 
-		await employee.save();
+	await employee.save();
 
-		return employee;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.employee.notCreated);
-	}
+	return employee;
 };
 
-export const getEmployees_service = async (): Promise<employee_from_DB[]> => {
-	try {
-		const employees = await employeeModel.find();
+export const getEmployees_service = async (
+	queryEmployeeDto: QueryEmployeeDto
+): Promise<employee_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryEmployeeDto;
 
-		return employees;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.employee.whenObtaining);
-	}
+	const employees = await employeeModel.find(query).sort("name");
+
+	return employees;
 };
 
 export const getOneEmployee_service = async (
-	_id: string
+	id: string
 ): Promise<employee_from_DB> => {
-	try {
-		const employee = await employeeModel.findById(_id);
+	const employee = await employeeModel.findById(id);
 
-		return employee;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.employee.whenObtaining);
-	}
+	if (!employee)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.employee));
+
+	return employee;
 };
 
 export const updateEmployee_service = async (
-	_id: string,
-	data: employeeAttributes
+	id: string,
+	data: UpdateEmployeeDto
 ): Promise<employee_from_DB> => {
-	try {
-		await employeeModel.updateOne({ _id }, data);
+	const employee = await employeeModel.findByIdAndUpdate(id, data, {
+		new: true,
+	});
 
-		const employee = employeeModel.findById(_id);
+	if (!employee)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.employee));
 
-		return employee;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.employee.whenObtaining);
-	}
+	return employee;
 };
 
 export const deleteEmployee_service = async (_id: string): Promise<void> => {
-	try {
-		const result = await employeeModel.deleteOne({ _id });
+	const result = await employeeModel.deleteOne({ _id });
 
-		console.log(result);
+	console.log(result);
 
-		if (!result.deletedCount) throw new Error(ErrorMsg.employee.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.employee.whenObtaining);
-	}
+	if (!result.deletedCount)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.employee));
 };

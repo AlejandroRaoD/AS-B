@@ -6,13 +6,17 @@ import {
 	getOneFiam_controller,
 	updateFiam_controller,
 } from "../fiam.controller";
+import {
+	FiamValidator,
+	QueryFiamValidator,
+} from "../validators/fiam.validator";
 
 const router = express.Router();
 
-router.post("/", createFiam_controller);
-router.get("/", getFiams_controller);
+router.post("/", FiamValidator, createFiam_controller);
+router.get("/", QueryFiamValidator, getFiams_controller);
 router.get("/:id", getOneFiam_controller);
-router.put("/:id", updateFiam_controller);
+router.put("/:id", FiamValidator, updateFiam_controller);
 router.delete("/:id", deleteFiam_controller);
 
 export default router;

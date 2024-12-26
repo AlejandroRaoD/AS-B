@@ -6,15 +6,17 @@ import {
 	getOneStudentEnrollment_service,
 	updateStudentEnrollment_service,
 } from "./studentEnrollment.service";
-import getStudentEnrollmentDataOfRequest from "./helpers/getStudentEnrollmentData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { CreateStudentEnrollmentDto } from "./dto/create-student-Enrollment.dto";
+import { matchedData } from "express-validator";
+import { QueryStudentEnrollmentDto } from "./dto/query-student.dto";
+import { UpdateStudentEnrollmentDto } from "./dto/update-student.dto";
 
 export const createStudentEnrollment_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getStudentEnrollmentDataOfRequest(req.body);
+	const data = matchedData(req) as CreateStudentEnrollmentDto;
 
 	try {
 		const studentEnrollment = await createStudentEnrollment_service(data);
@@ -26,13 +28,13 @@ export const createStudentEnrollment_controller = async (
 };
 
 export const getStudentEnrollments_controller = async (
-	_req: Request,
+	req: Request,
 	res: Response
 ) => {
-	// const query = req.query
+	const data = matchedData(req) as QueryStudentEnrollmentDto;
 
 	try {
-		const studentEnrollments = await getStudentEnrollments_service();
+		const studentEnrollments = await getStudentEnrollments_service(data);
 
 		res.status(200).json({ data: studentEnrollments });
 	} catch (error) {
@@ -44,10 +46,10 @@ export const getOneStudentEnrollment_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const studentEnrollment = await getOneStudentEnrollment_service(_id);
+		const studentEnrollment = await getOneStudentEnrollment_service(id);
 
 		res.status(200).json({ data: studentEnrollment });
 	} catch (error) {
@@ -60,17 +62,15 @@ export const updateStudentEnrollment_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getStudentEnrollmentDataOfRequest(req.body);
+		const { id } = req.params;
 
-		const studentEnrollment = await updateStudentEnrollment_service(_id, data);
+		const data = matchedData(req) as UpdateStudentEnrollmentDto;
+
+		const studentEnrollment = await updateStudentEnrollment_service(id, data);
 
 		res.json({ data: studentEnrollment });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.studentEnrollment.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -79,16 +79,12 @@ export const deleteStudentEnrollment_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteStudentEnrollment_service(_id);
+		await deleteStudentEnrollment_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: "ok" });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.studentEnrollment.delete });
+		errorHandlerHelper(error, res);
 	}
 };

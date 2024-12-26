@@ -6,15 +6,17 @@ import {
 	getOneRepresentative_service,
 	updateRepresentative_service,
 } from "./representative.service";
-import getRepresentativeDataOfRequest from "./helpers/getRepresentativeData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { matchedData } from "express-validator";
+import { CreateRepresentativeDto } from "./dto/create-representative.dto";
+import { QueryRepresentativeDto } from "./dto/query-representative.dto";
+import { UpdateRepresentativeDto } from "./dto/update-student.dto";
 
 export const createRepresentative_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getRepresentativeDataOfRequest(req.body);
+	const data = matchedData(req) as CreateRepresentativeDto;
 
 	try {
 		const representative = await createRepresentative_service(data);
@@ -26,13 +28,13 @@ export const createRepresentative_controller = async (
 };
 
 export const getRepresentatives_controller = async (
-	_req: Request,
+	req: Request,
 	res: Response
 ) => {
-	// const query = req.query
+	const query = matchedData(req) as QueryRepresentativeDto;
 
 	try {
-		const representatives = await getRepresentatives_service();
+		const representatives = await getRepresentatives_service(query);
 
 		res.status(200).json({ data: representatives });
 	} catch (error) {
@@ -44,10 +46,10 @@ export const getOneRepresentative_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const representative = await getOneRepresentative_service(_id);
+		const representative = await getOneRepresentative_service(id);
 
 		res.status(200).json({ data: representative });
 	} catch (error) {
@@ -60,17 +62,14 @@ export const updateRepresentative_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
-		const data = getRepresentativeDataOfRequest(req.body);
+		const { id } = req.params;
+		const data = matchedData(req) as UpdateRepresentativeDto;
 
-		const representative = await updateRepresentative_service(_id, data);
+		const representative = await updateRepresentative_service(id, data);
 
 		res.json({ data: representative });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.representative.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -79,16 +78,12 @@ export const deleteRepresentative_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteRepresentative_service(_id);
+		await deleteRepresentative_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: "ok" });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.representative.delete });
+		errorHandlerHelper(error, res);
 	}
 };

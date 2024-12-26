@@ -6,15 +6,17 @@ import {
 	getOneEmployee_service,
 	updateEmployee_service,
 } from "./employee.service";
-import getEmployeeDataOfRequest from "./helpers/getEmployeeData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { CreateEmployeeDto } from "./dto/create-employee.dto";
+import { matchedData } from "express-validator";
+import { QueryEmployeeDto } from "./dto/query-employee.dto";
+import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 
 export const createEmployee_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getEmployeeDataOfRequest(req.body);
+	const data = matchedData(req) as CreateEmployeeDto;
 
 	try {
 		const employee = await createEmployee_service(data);
@@ -25,11 +27,11 @@ export const createEmployee_controller = async (
 	}
 };
 
-export const getEmployees_controller = async (_req: Request, res: Response) => {
-	// const query = req.query
+export const getEmployees_controller = async (req: Request, res: Response) => {
+	const query = matchedData(req) as QueryEmployeeDto;
 
 	try {
-		const employees = await getEmployees_service();
+		const employees = await getEmployees_service(query);
 
 		res.status(200).json({ data: employees });
 	} catch (error) {
@@ -41,10 +43,10 @@ export const getOneEmployee_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const employee = await getOneEmployee_service(_id);
+		const employee = await getOneEmployee_service(id);
 
 		res.status(200).json({ data: employee });
 	} catch (error) {
@@ -58,16 +60,13 @@ export const updateEmployee_controller = async (
 ) => {
 	try {
 		const { id: _id } = req.params;
-		const data = getEmployeeDataOfRequest(req.body);
+		const data = matchedData(req) as UpdateEmployeeDto;
 
 		const employee = await updateEmployee_service(_id, data);
 
 		res.json({ data: employee });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.employee.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -76,16 +75,12 @@ export const deleteEmployee_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteEmployee_service(_id);
+		await deleteEmployee_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: "ok" });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.employee.delete });
+		errorHandlerHelper(error, res);
 	}
 };

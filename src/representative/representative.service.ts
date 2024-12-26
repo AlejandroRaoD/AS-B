@@ -1,75 +1,59 @@
-import { ErrorMsg } from "../config/messages";
+import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg, moduleItems } from "../config/messages";
+import { CreateRepresentativeDto } from "./dto/create-representative.dto";
+import { QueryRepresentativeDto } from "./dto/query-representative.dto";
+import { UpdateRepresentativeDto } from "./dto/update-student.dto";
 import representativeModel, {
-	representativeAttributes,
 	representative_from_DB,
 } from "./models/representative.model";
 
 export const createRepresentative_service = async (
-	data: representativeAttributes
+	data: CreateRepresentativeDto
 ): Promise<representative_from_DB> => {
-	try {
-		const representative = new representativeModel(data);
+	const representative = new representativeModel(data);
 
-		await representative.save();
+	await representative.save();
 
-		return representative;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.representative.notCreated);
-	}
+	return representative;
 };
 
-export const getRepresentatives_service = async (): Promise<
-	representative_from_DB[]
-> => {
-	try {
-		const representatives = await representativeModel.find().sort("name");
+export const getRepresentatives_service = async (
+	queryRepresentativeDto: QueryRepresentativeDto
+): Promise<representative_from_DB[]> => {
+	const { skip = 0, limit = 10, ...query } = queryRepresentativeDto;
 
-		return representatives;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.representative.whenObtaining);
-	}
+	const representatives = await representativeModel.find(query).sort("name");
+
+	return representatives;
 };
 
 export const getOneRepresentative_service = async (
 	_id: string
 ): Promise<representative_from_DB> => {
-	try {
-		const representative = await representativeModel.findById(_id);
+	const representative = await representativeModel.findById(_id);
 
-		return representative;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.representative.whenObtaining);
-	}
+	if (!representative)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.representative));
+
+	return representative;
 };
 
 export const updateRepresentative_service = async (
-	_id: string,
-	data: representativeAttributes
+	id: string,
+	data: UpdateRepresentativeDto
 ): Promise<representative_from_DB> => {
-	try {
-		await representativeModel.updateOne({ _id }, data);
+	const representative = await representativeModel.findByIdAndUpdate(id, data, {
+		new: true,
+	});
 
-		const representative = representativeModel.findById(_id);
+	if (!representative)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.representative));
 
-		return representative;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.representative.whenObtaining);
-	}
+	return representative;
 };
 
 export const deleteRepresentative_service = async (
 	_id: string
 ): Promise<void> => {
-	try {
-		const result = await representativeModel.deleteOne({ _id });
-
-		if (!result.deletedCount) throw new Error(ErrorMsg.representative.notFound);
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.representative.whenObtaining);
-	}
+	await representativeModel.deleteOne({ _id });
 };

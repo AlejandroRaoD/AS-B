@@ -6,15 +6,17 @@ import {
 	getOneInstrument_service,
 	updateInstrument_service,
 } from "./instrument.service";
-import getInstrumentDataOfRequest from "./helpers/getInstrumentData.helper";
-import { ErrorMsg } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
+import { CreateInstrumentDto } from "./dto/create-instrument.dto";
+import { matchedData } from "express-validator";
+import { QueryInstrumentDto } from "./dto/query-instrument.dto";
+import { UpdateInstrumentDto } from "./dto/update-instrument.dto";
 
 export const createInstrument_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const data = getInstrumentDataOfRequest(req.body);
+	const data = matchedData(req) as CreateInstrumentDto;
 
 	try {
 		const instrument = await createInstrument_service(data);
@@ -26,13 +28,13 @@ export const createInstrument_controller = async (
 };
 
 export const getInstruments_controller = async (
-	_req: Request,
+	req: Request,
 	res: Response
 ) => {
-	// const query = req.query
+	const query = matchedData(req) as QueryInstrumentDto;
 
 	try {
-		const instruments = await getInstruments_service();
+		const instruments = await getInstruments_service(query);
 
 		res.status(200).json({ data: instruments });
 	} catch (error) {
@@ -44,10 +46,10 @@ export const getOneInstrument_controller = async (
 	req: Request,
 	res: Response
 ) => {
-	const { id: _id } = req.params;
+	const { id } = req.params;
 
 	try {
-		const instrument = await getOneInstrument_service(_id);
+		const instrument = await getOneInstrument_service(id);
 
 		res.status(200).json({ data: instrument });
 	} catch (error) {
@@ -61,16 +63,14 @@ export const updateInstrument_controller = async (
 ) => {
 	try {
 		const { id: _id } = req.params;
-		const data = getInstrumentDataOfRequest(req.body);
+
+		const data = matchedData(req) as UpdateInstrumentDto;
 
 		const instrument = await updateInstrument_service(_id, data);
 
 		res.json({ data: instrument });
 	} catch (error) {
-		console.log(error);
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.instrument.update });
+		errorHandlerHelper(error, res);
 	}
 };
 
@@ -79,16 +79,12 @@ export const deleteInstrument_controller = async (
 	res: Response
 ) => {
 	try {
-		const { id: _id } = req.params;
+		const { id } = req.params;
 
-		await deleteInstrument_service(_id);
+		await deleteInstrument_service(id);
 
-		res.json({ ok: true });
+		res.json({ data: "ok" });
 	} catch (error) {
-		console.log(error);
-
-		res
-			.status(500)
-			.json({ error: true, message: ErrorMsg.instrument.delete });
+		errorHandlerHelper(error, res);
 	}
 };
