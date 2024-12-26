@@ -13,16 +13,19 @@ export interface User_from_DB extends UserAttributes, Document {
 	comparePassword(passwordReceived: string): Promise<boolean>;
 }
 
-const UserSchema = new mongoose.Schema({
-	email: { type: String, trim: true, require: true, unique: true },
-	password: { type: String, require: true, default: "" },
-	permissions: [{ type: String }],
-	employeeId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Employee",
-		require: true,
+const UserSchema = new mongoose.Schema(
+	{
+		email: { type: String, trim: true, require: true, unique: true },
+		password: { type: String, require: true, default: "" },
+		permissions: [{ type: String }],
+		employeeId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Employee",
+			require: true,
+		},
 	},
-});
+	{ timestamps: true }
+);
 
 UserSchema.pre("save", async function (next) {
 	const user = this;

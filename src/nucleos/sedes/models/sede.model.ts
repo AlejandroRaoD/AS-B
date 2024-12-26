@@ -18,16 +18,19 @@ export interface sedeAttributes {
 
 export interface sede_from_DB extends Omit<sedeAttributes, "_id">, Document {}
 
-const SedeSchema = new mongoose.Schema({
-	name: { type: String, trim: true, require: true },
-	address: { type: String, trim: true, required: true },
-	phone_number: [{ type: String, trim: true, required: true }],
-	nucleoId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Nucleo",
-		require: true,
+const SedeSchema = new mongoose.Schema(
+	{
+		name: { type: String, trim: true, require: true },
+		address: { type: String, trim: true, required: true },
+		phone_number: [{ type: String, trim: true, required: true }],
+		nucleoId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Nucleo",
+			require: true,
+		},
+		status: { type: String, trim: true, default: sedeStatus.active },
 	},
-	status: { type: String, trim: true, default: sedeStatus.active },
-});
+	{ timestamps: true }
+);
 
 export default mongoose.model<sede_from_DB>("Sede", SedeSchema);

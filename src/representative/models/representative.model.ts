@@ -20,18 +20,21 @@ export interface representative_from_DB
 	extends Omit<representativeAttributes, "_id">,
 		Document {}
 
-const RepresentativeSchema = new mongoose.Schema({
-	name: { type: String, trim: true, require: true },
-	lastname: { type: String, trim: true },
-	birthday: { type: Date, require: true },
-	nationality: { type: String, trim: true, default: Nationality.Venezuelan },
-	CI: { type: String, trim: true, require: true, unique: true },
-	email: { type: String, trim: true, require: true, unique: true },
-	gender: { type: String, enum: Gender },
-	address: { type: String, trim: true, require: true },
-	phone_number: [String],
-	job: { type: String, require: true },
-});
+const RepresentativeSchema = new mongoose.Schema(
+	{
+		name: { type: String, trim: true, require: true },
+		lastname: { type: String, trim: true },
+		birthday: { type: Date, require: true },
+		nationality: { type: String, trim: true, default: Nationality.Venezuelan },
+		CI: { type: String, trim: true, require: true, unique: true },
+		email: { type: String, trim: true, require: true, unique: true },
+		gender: { type: String, enum: Gender },
+		address: { type: String, trim: true, require: true },
+		phone_number: [String],
+		job: { type: String, require: true },
+	},
+	{ timestamps: true }
+);
 
 export default mongoose.model<representative_from_DB>(
 	"Representative",

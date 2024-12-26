@@ -18,20 +18,23 @@ export interface fiamAttributes {
 
 export interface fiam_from_DB extends Omit<fiamAttributes, "_id">, Document {}
 
-const FiamSchema = new mongoose.Schema({
-	catedraId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Catedra",
-		require: true,
-	},
+const FiamSchema = new mongoose.Schema(
+	{
+		catedraId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Catedra",
+			require: true,
+		},
 
-	employeeId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Employee",
-		require: true,
-	},
+		employeeId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Employee",
+			require: true,
+		},
 
-	type: { type: String, enum: FiamTypes, require: true },
-});
+		type: { type: String, enum: FiamTypes, require: true },
+	},
+	{ timestamps: true }
+);
 
 export default mongoose.model<fiam_from_DB>("Fiam", FiamSchema);

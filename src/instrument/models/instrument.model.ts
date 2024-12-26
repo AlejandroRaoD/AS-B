@@ -20,26 +20,29 @@ export interface instrument_from_DB
 	extends Omit<instrumentAttributes, "_id">,
 		Document {}
 
-const InstrumentSchema = new mongoose.Schema({
-	name: { type: String, trim: true, require: true },
-	description: { type: String, trim: true, default: "" },
+const InstrumentSchema = new mongoose.Schema(
+	{
+		name: { type: String, trim: true, require: true },
+		description: { type: String, trim: true, default: "" },
 
-	serialNumber: { type: String, trim: true, default: "" },
-	brand: { type: String, trim: true, default: "" },
-	model: { type: String, trim: true, default: "" },
-	status: {
-		type: String,
-		enum: InstrumentStatus,
-		default: InstrumentStatus.active,
-	},
-	observation: { type: String, trim: true, default: "" },
+		serialNumber: { type: String, trim: true, default: "" },
+		brand: { type: String, trim: true, default: "" },
+		model: { type: String, trim: true, default: "" },
+		status: {
+			type: String,
+			enum: InstrumentStatus,
+			default: InstrumentStatus.active,
+		},
+		observation: { type: String, trim: true, default: "" },
 
-	sedeId: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Sede",
-		require: true,
+		sedeId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Sede",
+			require: true,
+		},
 	},
-});
+	{ timestamps: true }
+);
 
 export default mongoose.model<instrument_from_DB>(
 	"Instrument",

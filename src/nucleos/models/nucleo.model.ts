@@ -15,9 +15,12 @@ export interface nucleo_from_DB
 	extends Omit<nucleoAttributes, "_id">,
 		Document {}
 
-const NucleoSchema = new mongoose.Schema({
-	name: { type: String, trim: true, require: true, unique: true },
-	status: { type: String, trim: true, default: nucleoStatus.active },
-});
+const NucleoSchema = new mongoose.Schema(
+	{
+		name: { type: String, trim: true, require: true, unique: true },
+		status: { type: String, trim: true, default: nucleoStatus.active },
+	},
+	{ timestamps: true }
+);
 
 export default mongoose.model<nucleo_from_DB>("Nucleo", NucleoSchema);

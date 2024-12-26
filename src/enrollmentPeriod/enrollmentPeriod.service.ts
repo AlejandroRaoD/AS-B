@@ -34,8 +34,8 @@ export const getEnrollmentPeriods_service = async (
 
 	const enrollmentPeriods = await enrollmentPeriodModel
 		.find(query)
-		.skip(skip)
-		.limit(limit)
+		// .skip(skip)
+		// .limit(limit)
 		.sort("year");
 
 	return enrollmentPeriods;
