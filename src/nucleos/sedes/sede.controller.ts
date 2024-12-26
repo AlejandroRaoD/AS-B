@@ -66,9 +66,9 @@ export const deleteSede_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
 
-		const sede = await deleteSede_service(id);
+		await deleteSede_service(id);
 
-		res.json({ data: sede });
+		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);
 	}

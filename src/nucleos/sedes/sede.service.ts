@@ -1,11 +1,7 @@
 import { NotFoundException } from "../../common/classes/ErrorWithHttpStatus";
 import { ErrorMsg, moduleItems } from "../../config/messages";
 import { QuerySedeDto } from "./dto/query-sede.dto";
-import sedeModel, {
-	sedeAttributes,
-	sedeStatus,
-	sede_from_DB,
-} from "./models/sede.model";
+import sedeModel, { sedeAttributes, sede_from_DB } from "./models/sede.model";
 
 export const createSede_service = async (
 	data: Omit<sedeAttributes, "_id" | "status">
@@ -24,8 +20,8 @@ export const getSedes_service = async (
 
 	const sedes = await sedeModel
 		.find(query)
-		.skip(skip)
-		.limit(limit)
+		// .skip(skip)
+		// .limit(limit)
 		.sort("name");
 
 	return sedes;
@@ -56,18 +52,8 @@ export const updateSede_service = async (
 	return sede;
 };
 
-export const deleteSede_service = async (
-	_id: string
-): Promise<sede_from_DB> => {
-	const sede = await sedeModel.findOneAndUpdate(
-		{ _id },
-		{ status: sedeStatus.delete },
-		{ new: true }
-	);
-
+export const deleteSede_service = async (id: string): Promise<void> => {
 	// todo: que no se pueda marcar como eliminado si tiene referencias
 
-	if (!sede) throw new NotFoundException(ErrorMsg.notFound(moduleItems.sede));
-
-	return sede;
+	await sedeModel.findOneAndDelete({ _id: id });
 };

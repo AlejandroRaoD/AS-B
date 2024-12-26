@@ -37,8 +37,8 @@ export const getNucleos_service = async (
 
 	const nucleos = await nucleoModel
 		.find(query)
-		.skip(skip)
-		.limit(limit)
+		// .skip(skip)
+		// .limit(limit)
 		.sort("name");
 
 	return nucleos;
@@ -96,15 +96,4 @@ export const deleteNucleo_service = async (id: string): Promise<void> => {
 		throw new BadRequestException(ErrorMsg.hasDependencies(moduleItems.nucleo));
 
 	await nucleoModel.findOneAndDelete({ _id: id });
-
-	// const nucleo = await nucleoModel.findOneAndUpdate(
-	// 	{ _id: id },
-	// 	{ status: nucleoStatus.delete },
-	// 	{ new: true }
-	// );
-
-	// if (!nucleo)
-	// 	throw new NotFoundException(ErrorMsg.notFound(moduleItems.nucleo));
-
-	// return nucleo;
 };

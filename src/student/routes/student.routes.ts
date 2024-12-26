@@ -5,35 +5,44 @@ import {
 	getStudents_controller,
 	getOneStudent_controller,
 	updateStudent_controller,
+	createStudentRelation_controller,
+	updateStudentRelation_controller,
+	deleteStudentRelation_controller,
+	getStudentRelations_controller,
 } from "../student.controller";
+
 import {
 	QueryStudentValidator,
 	StudentValidator,
 } from "../validators/student.validator";
+
 import {
-	QueryStudentRepresentativeValidator,
-	StudentRepresentativeValidator,
-} from "../validators/studentRepresentative.validator";
+	QueryStudentRelationValidator,
+	StudentRelationValidator as StudentRelationValidator,
+	UpdateStudentRelationValidator,
+} from "../validators/studentRelation.validator";
 
 const router = express.Router();
 
 router.post(
 	"/relation",
-	StudentRepresentativeValidator,
-	createStudent_controller
+	StudentRelationValidator,
+	createStudentRelation_controller
 );
+
 router.get(
 	"/relation",
-	QueryStudentRepresentativeValidator,
-	getStudents_controller
+	QueryStudentRelationValidator,
+	getStudentRelations_controller
 );
-router.get("/relation/:id", getOneStudent_controller);
+
 router.put(
 	"/relation/:id",
-	StudentRepresentativeValidator,
-	updateStudent_controller
+	UpdateStudentRelationValidator,
+	updateStudentRelation_controller
 );
-router.delete("/relation/:id", deleteStudent_controller);
+
+router.delete("/relation/:id", deleteStudentRelation_controller);
 
 router.post("/", StudentValidator, createStudent_controller);
 router.get("/", QueryStudentValidator, getStudents_controller);

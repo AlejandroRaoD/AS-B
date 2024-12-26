@@ -2,23 +2,23 @@ import { Request, Response } from "express";
 import {
 	createStudent_service,
 	deleteStudent_service,
-	getStudentsRepresentative_service,
 	getOneStudent_service,
 	updateStudent_service,
-	createStudentAndRepresenttive_service,
-	updateStudentRepresentative_service,
-	getOneStudentRepresentative_service,
-	deleteStudentRepresentative_service,
+	createStudentRelation_service,
 	getStudents_service,
+	getStudentRelations_service,
+	updateStudentRelation_service,
+	deleteStudentRelation_service,
 } from "./student.service";
+
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 import { matchedData } from "express-validator";
 import { CreateStudentDto } from "./dto/create-student.dto";
 import { QueryStudentDto } from "./dto/query-student.dto";
 import { UpdateStudentDto } from "./dto/update-student.dto";
-import { CreateStudentRepresentativeDto } from "./dto/create-student-representative.dto";
-import { QueryStudentRepresentativeDto } from "./dto/query-student-representative.dto";
-import { UpdateStudentRepresentativeDto } from "./dto/update-student-representative.dto";
+import { CreateStudentRelationDto } from "./dto/create-student-relation.dto";
+import { QueryStudentRelationDto } from "./dto/query-student-relation.dto";
+import { UpdateStudentRelationDto } from "./dto/update-student-relation.dto";
 
 export const createStudent_controller = async (req: Request, res: Response) => {
 	try {
@@ -82,15 +82,16 @@ export const deleteStudent_controller = async (req: Request, res: Response) => {
 // 							relacion entre estudiante y representante
 // ************************************************************************
 
-export const createStudentRepresentative_controller = async (
+export const createStudentRelation_controller = async (
 	req: Request,
 	res: Response
 ) => {
 	try {
 		const createStudentRepresentativeDto = matchedData(
 			req
-		) as CreateStudentRepresentativeDto;
-		const relation = await createStudentAndRepresenttive_service(
+		) as CreateStudentRelationDto;
+
+		const relation = await createStudentRelation_service(
 			createStudentRepresentativeDto
 		);
 
@@ -100,14 +101,14 @@ export const createStudentRepresentative_controller = async (
 	}
 };
 
-export const getStudentRepresentatives_controller = async (
+export const getStudentRelations_controller = async (
 	req: Request,
 	res: Response
 ) => {
 	try {
-		const query = matchedData(req) as QueryStudentRepresentativeDto;
+		const query = matchedData(req) as QueryStudentRelationDto;
 
-		const relations = await getStudentsRepresentative_service(query);
+		const relations = await getStudentRelations_service(query);
 
 		res.status(200).json({ data: relations });
 	} catch (error) {
@@ -115,33 +116,20 @@ export const getStudentRepresentatives_controller = async (
 	}
 };
 
-export const getOneStudentRepresentative_controller = async (
+export const updateStudentRelation_controller = async (
 	req: Request,
 	res: Response
 ) => {
 	try {
 		const { id } = req.params;
-		const relation = await getOneStudentRepresentative_service(id);
 
-		res.status(200).json({ data: relation });
-	} catch (error) {
-		errorHandlerHelper(error, res);
-	}
-};
-
-export const updateStudentRepresentative_controller = async (
-	req: Request,
-	res: Response
-) => {
-	try {
-		const { id } = req.params;
-		const updateStudentRepresentativeDto = matchedData(
+		const updateStudentRelationDto = matchedData(
 			req
-		) as UpdateStudentRepresentativeDto;
+		) as UpdateStudentRelationDto;
 
-		const relation = await updateStudentRepresentative_service(
+		const relation = await updateStudentRelation_service(
 			id,
-			updateStudentRepresentativeDto
+			updateStudentRelationDto
 		);
 
 		res.json({ data: relation });
@@ -150,14 +138,14 @@ export const updateStudentRepresentative_controller = async (
 	}
 };
 
-export const deleteStudentRepresentative_controller = async (
+export const deleteStudentRelation_controller = async (
 	req: Request,
 	res: Response
 ) => {
 	try {
 		const { id } = req.params;
 
-		await deleteStudentRepresentative_service(id);
+		await deleteStudentRelation_service(id);
 
 		res.json({ data: "ok" });
 	} catch (error) {

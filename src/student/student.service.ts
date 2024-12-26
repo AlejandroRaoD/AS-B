@@ -1,18 +1,18 @@
 import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
 import { ErrorMsg, moduleItems } from "../config/messages";
-import { CreateStudentRepresentativeDto } from "./dto/create-student-representative.dto";
+import { CreateStudentRelationDto } from "./dto/create-student-relation.dto";
 import { CreateStudentDto } from "./dto/create-student.dto";
-import { QueryStudentRepresentativeDto } from "./dto/query-student-representative.dto";
+import { QueryStudentRelationDto } from "./dto/query-student-relation.dto";
 import { QueryStudentDto } from "./dto/query-student.dto";
-import { UpdateStudentRepresentativeDto } from "./dto/update-student-representative.dto";
+import { UpdateStudentRelationDto } from "./dto/update-student-relation.dto";
 import { UpdateStudentDto } from "./dto/update-student.dto";
 import studentModel, {
 	StudentStatus,
 	student_from_DB,
 } from "./models/student.model";
-import studentRepresentativeModel, {
-	studentRepresentative_from_DB,
-} from "./models/studentRepresentative.model";
+import studentRelationModel, {
+	studentRelation_from_DB,
+} from "./models/studentRelation.model";
 
 export const createStudent_service = async (
 	createStudentDto: CreateStudentDto
@@ -31,14 +31,14 @@ export const getStudents_service = async (
 
 	const formatedQuery = {
 		...query,
-		name: query.name ? new RegExp(`${query.name }`, "i") : new RegExp(``, "i"),
+		name: query.name ? new RegExp(`${query.name}`, "i") : new RegExp(``, "i"),
 		// phone_number:[que]
 	};
 
 	const students = await studentModel
 		.find(formatedQuery)
-		.skip(skip)
-		.limit(limit)
+		// .skip(skip)
+		// .limit(limit)
 		.sort("name");
 
 	return students;
@@ -86,50 +86,33 @@ export const deleteStudent_service = async (
 
 // relacionar con representante
 
-export const createStudentAndRepresenttive_service = async (
-	createStudentRepresentativeDto: CreateStudentRepresentativeDto
-): Promise<studentRepresentative_from_DB> => {
-	const relation = new studentRepresentativeModel(
-		createStudentRepresentativeDto
-	);
+export const createStudentRelation_service = async (
+	CreateStudentRelationDto: CreateStudentRelationDto
+): Promise<studentRelation_from_DB> => {
+	const relation = new studentRelationModel(CreateStudentRelationDto);
 
 	await relation.save();
 
 	return relation;
 };
 
-export const getStudentsRepresentative_service = async (
-	queryStudentRepresentativeDto: QueryStudentRepresentativeDto
-): Promise<studentRepresentative_from_DB[]> => {
-	const { ...query } = queryStudentRepresentativeDto;
+export const getStudentRelations_service = async (
+	QueryStudentRelationDto: QueryStudentRelationDto
+): Promise<studentRelation_from_DB[]> => {
+	const { ...query } = QueryStudentRelationDto;
 
-	const relations = await studentRepresentativeModel
-		.find(query)
-		// .skip(skip)
-		// .limit(limit)
-		.sort("name");
+	const relations = await studentRelationModel.find(query);
 
 	return relations;
 };
 
-export const getOneStudentRepresentative_service = async (
-	id: string
-): Promise<studentRepresentative_from_DB> => {
-	const relation = await studentRepresentativeModel.findById(id);
-
-	if (!relation)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.student));
-
-	return relation;
-};
-
-export const updateStudentRepresentative_service = async (
+export const updateStudentRelation_service = async (
 	id: string,
-	updateStudentRepresentativeDto: UpdateStudentRepresentativeDto
-): Promise<studentRepresentative_from_DB> => {
-	const relation = studentRepresentativeModel.findOneAndUpdate(
+	UpdateStudentRelationDto: UpdateStudentRelationDto
+): Promise<studentRelation_from_DB> => {
+	const relation = studentRelationModel.findOneAndUpdate(
 		{ _id: id },
-		updateStudentRepresentativeDto,
+		UpdateStudentRelationDto,
 		{
 			new: true,
 		}
@@ -141,8 +124,8 @@ export const updateStudentRepresentative_service = async (
 	return relation;
 };
 
-export const deleteStudentRepresentative_service = async (
+export const deleteStudentRelation_service = async (
 	id: string
 ): Promise<void> => {
-	await studentRepresentativeModel.deleteOne({ _id: id });
+	await studentRelationModel.deleteOne({ _id: id });
 };
