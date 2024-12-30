@@ -2,18 +2,18 @@ export enum moduleItems {
 	nucleo = "nucleo",
 	user = "usuario",
 	sede = "sede",
-	employee = "employee",
+	employee = "empleado",
 	programa = "programa",
 	catedra = "catedra",
 	fiam = "fiam",
-	student = "student",
-	representative = "representative",
-	studentRepresentative = "studentRepresentative",
-	furniture = "furniture",
-	instrument = "instrument",
+	student = "estudiante",
+	representative = "representante",
+	studentRepresentative = "relacion",
+	furniture = "inventario",
+	instrument = "intrumento",
 	comodato = "comodato",
-	enrollmentPeriod = "enrollmentPeriod",
-	studentEnrollment = "studentEnrollment",
+	enrollmentPeriod = "perioodo de inscripcion",
+	studentEnrollment = "inscripcion de estudiante",
 }
 
 export const successMessages = {
@@ -21,17 +21,17 @@ export const successMessages = {
 };
 
 export const ErrorMsg = {
-	errorInData: (item: moduleItems) => `the ${item} are errors in data`,
-	notCreated: (item: moduleItems) => `the ${item} are not created`,
-	notFound: (item: moduleItems) => `the ${item} not found`,
-	alreadyExist: (item: moduleItems) => `the ${item} ready exist`,
-	onUpdate: (item: moduleItems) => `the ${item} not updated`,
-	onDelete: (item: moduleItems) => `the ${item} not deleted`,
-	hasDependencies: (item: moduleItems) => `the ${item} has dependencies`,
+	errorInData: (item: moduleItems) => `Hay algun error en los datos del ${item}`,
+	notCreated: (item: moduleItems) => `El/La ${item} no fue creado`,
+	notFound: (item: moduleItems) => `${item} no encontrado`,
+	alreadyExist: (item: moduleItems) => `El/La ${item} ya existe`,
+	onUpdate: (item: moduleItems) => `El/La ${item} no fue actualizado`,
+	onDelete: (item: moduleItems) => `El/La ${item} no fue eliminado`,
+	hasDependencies: (item: moduleItems) => `El/La ${item} tiene dependencias`,
 
 	common: {
-		internal: "internal server error",
-		duplicate: "item ready exist",
+		internal: "Error en el servidor",
+		duplicate: "el item ya existe",
 	},
 
 	user: {
