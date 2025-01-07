@@ -1,18 +1,20 @@
 import mongoose from "mongoose";
 import { BusinessPosition, Gender } from "../../config/enums";
+import { Nationality } from "../../common/interfaces/nationality.enum";
 
 export interface employeeAttributes {
 	_id: string;
 	name: string;
 	lastname: string;
 	birthday: Date;
+	nationality: Nationality;
 	CI: string;
 	email: string;
 	gender: Gender;
 	address: string;
 	phone_number: string[];
 	businessPosition: BusinessPosition;
-	sedeId: String;
+	sedeId: string;
 }
 
 export interface employee_from_DB
@@ -35,6 +37,7 @@ const EmployeeSchema = new mongoose.Schema(
 			ref: "Sede",
 			require: true,
 		},
+		nationality: { type: String, trim: true, default: Nationality.Venezuelan },
 	},
 	{ timestamps: true }
 );

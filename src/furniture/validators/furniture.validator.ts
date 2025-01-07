@@ -30,7 +30,7 @@ export const QueryFurnitureValidator = [
 	query("brand").optional().isString().trim(),
 	query("model").optional().isString().trim(),
 	query("observation").optional().isString().trim(),
-	query("localLocation").exists().isString().trim(),
+	query("localLocation").optional().isString().trim(),
 	query("sedeId").optional().isString().isMongoId(),
 
 	(req: Request, res: Response, next: NextFunction) => {

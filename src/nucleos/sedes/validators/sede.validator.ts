@@ -25,6 +25,7 @@ export const UpdateSedeValidator = [
 
 export const QuerySedeValidator = [
 	query("name").optional().isString().trim().notEmpty(),
+	query("nucleoId").optional().isString().trim().isMongoId(),
 	query("limit").optional().isInt().toInt().default(10),
 	query("skip").optional().isInt().toInt().default(0),
 	(req: Request, res: Response, next: NextFunction) => {
