@@ -20,7 +20,7 @@ export const createNucleo_service = async (
 	const { name } = data;
 
 	const exist = await existOtherNucleo_service(name);
-	
+
 	if (exist)
 		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.nucleo));
 
@@ -36,8 +36,10 @@ export const getNucleos_service = async (
 ): Promise<nucleo_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryNucleoDto;
 
+	const formatQuery = { ...query, name: new RegExp(query.name, "i") };
+
 	const nucleos = await nucleoModel
-		.find(query)
+		.find(formatQuery)
 		// .skip(skip)
 		// .limit(limit)
 		.sort("name");
