@@ -18,8 +18,10 @@ export const getSedes_service = async (
 ): Promise<sede_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = querySedeDto;
 
+	const formatQuery = { ...query, name: new RegExp(query.name, "i") };
+
 	const sedes = await sedeModel
-		.find(query)
+		.find(formatQuery)
 		// .skip(skip)
 		// .limit(limit)
 		.sort("name");

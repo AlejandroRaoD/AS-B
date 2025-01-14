@@ -21,7 +21,9 @@ export const getEmployees_service = async (
 ): Promise<employee_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryEmployeeDto;
 
-	const employees = await employeeModel.find(query).sort("name");
+	const formatQuery = { ...query, name: new RegExp(query.name, "i") };
+
+	const employees = await employeeModel.find(formatQuery).sort("name");
 
 	return employees;
 };
