@@ -20,7 +20,17 @@ export const getInstruments_service = async (
 ): Promise<instrument_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryInstrumentDto;
 
-	const instruments = await instrumentModel.find(query);
+	const formatedQuery = {
+		...query,
+		name: query.name ? new RegExp(`${query.name}`, "i") : new RegExp(``, "i"),
+		// phone_number:[que]
+	};
+
+	const instruments = await instrumentModel
+		.find(formatedQuery)
+		// .skip(skip)
+		// .limit(limit)
+		.sort("name");
 
 	return instruments;
 };
