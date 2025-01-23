@@ -7,10 +7,10 @@ import {
 	updateStudentEnrollment_service,
 } from "./studentEnrollment.service";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
-import { CreateStudentEnrollmentDto } from "./dto/create-student-Enrollment.dto";
+import { CreateStudentEnrollmentDto } from "./dto/create-student-enrollment.dto";
 import { matchedData } from "express-validator";
-import { QueryStudentEnrollmentDto } from "./dto/query-student.dto";
-import { UpdateStudentEnrollmentDto } from "./dto/update-student.dto";
+import { QueryStudentEnrollmentDto } from "./dto/query-student-enrollment.dto";
+import { UpdateStudentEnrollmentDto } from "./dto/update-student-enrollment.dto";
 
 export const createStudentEnrollment_controller = async (
 	req: Request,

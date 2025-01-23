@@ -1,8 +1,8 @@
 import { NotFoundException } from "../common/classes/ErrorWithHttpStatus";
 import { ErrorMsg, moduleItems } from "../config/messages";
-import { CreateStudentEnrollmentDto } from "./dto/create-student-Enrollment.dto";
-import { QueryStudentEnrollmentDto } from "./dto/query-student.dto";
-import { UpdateStudentEnrollmentDto } from "./dto/update-student.dto";
+import { CreateStudentEnrollmentDto } from "./dto/create-student-enrollment.dto";
+import { QueryStudentEnrollmentDto } from "./dto/query-student-enrollment.dto";
+import { UpdateStudentEnrollmentDto } from "./dto/update-student-enrollment.dto";
 import studentEnrollmentModel, {
 	studentEnrollment_from_DB,
 } from "./models/studentEnrollment.model";
