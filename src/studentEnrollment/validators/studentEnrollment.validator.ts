@@ -8,23 +8,37 @@ export const StudentEnrollmentValidator = [
 	body("enrollmentPeriodId").exists().isString().isMongoId(),
 	body("sedeId").exists().isString().isMongoId(),
 	body("content.*.catedraId").exists().isString().isMongoId(),
-	body("content.*.comodatoId").optional().isString().isMongoId(),
+	body("content.*.comodatoId")
+		.optional()
+		.custom((value) => {
+			if (value == null) return true;
+
+			if (typeof value == "string") return true;
+
+			return false;
+		}),
 
 	(req: Request, res: Response, next: NextFunction) => {
 		validateResult(req, res, next);
 	},
 ];
-
 
 export const UpdateStudentEnrollmentValidator = [
 	body("content.*.catedraId").exists().isString().isMongoId(),
-	body("content.*.comodatoId").optional().isString().isMongoId(),
+	body("content.*.comodatoId")
+		.optional()
+		.custom((value) => {
+			if (value == null) return true;
 
+			if (typeof value == "string") return true;
+
+			return false;
+		}),
+		
 	(req: Request, res: Response, next: NextFunction) => {
 		validateResult(req, res, next);
 	},
 ];
-
 
 export const QueryStudentEnrollmentValidator = [
 	query("limit").optional().isInt().toInt().default(10),
