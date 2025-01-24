@@ -52,6 +52,17 @@ export const getOneStudent_service = async (
 	return student;
 };
 
+export const getOneStudentByEmail_service = async (
+	email: string
+): Promise<student_from_DB> => {
+	const student = await studentModel.findOne({ email });
+
+	if (!student)
+		throw new NotFoundException(ErrorMsg.notFound(moduleItems.student));
+
+	return student;
+};
+
 export const updateStudent_service = async (
 	id: string,
 	updateStudentDto: UpdateStudentDto

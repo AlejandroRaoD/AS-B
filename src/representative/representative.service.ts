@@ -22,7 +22,11 @@ export const getRepresentatives_service = async (
 ): Promise<representative_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryRepresentativeDto;
 
-	const representatives = await representativeModel.find(query).sort("name");
+	const formatQuery = { ...query, name: new RegExp(query.name, "i") };
+
+	const representatives = await representativeModel
+		.find(formatQuery)
+		.sort("name");
 
 	return representatives;
 };

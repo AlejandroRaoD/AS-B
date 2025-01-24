@@ -4,7 +4,7 @@ export interface studentRelationAttributes {
 	_id: string;
 	representativeId: string;
 	studentId: string;
-	familyBond: String;
+	familyBond: string;
 }
 
 export interface studentRelation_from_DB

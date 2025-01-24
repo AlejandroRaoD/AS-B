@@ -4,12 +4,13 @@ import { body, query } from "express-validator";
 import validateResult from "../../common/helpers/validateHelper";
 import { Nationality } from "../../common/interfaces/nationality.enum";
 import { Gender } from "../../config/enums";
+import { getOneStudentByEmail_service } from "../student.service";
 
 export const StudentValidator = [
 	body("name").exists().isString().trim().notEmpty(),
 	body("lastname").exists().isString().trim(),
 	body("birthday").exists().isString().trim(),
-	
+
 	body("nationality")
 		.optional()
 		.isString()
@@ -20,7 +21,23 @@ export const StudentValidator = [
 		.optional()
 		.customSanitizer((value) => value.toString().replace(/\D/g, "")),
 
-	body("email").optional().isString().trim().isEmail(),
+	body("email")
+		.optional()
+		.isString()
+		.trim()
+		.isEmail()
+		.custom(async (a) => {
+			if (a == null) return true;
+
+			try {
+				await getOneStudentByEmail_service(a);
+
+				return false;
+			} catch (error) {
+				return true;
+			}
+		}),
+
 	body("gender").exists().isString().trim().isIn(Object.values(Gender)),
 	body("address").exists().isString().trim(),
 	body("phone_number.*")

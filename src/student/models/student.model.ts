@@ -33,7 +33,7 @@ const StudentSchema = new mongoose.Schema(
 		lastname: { type: String, trim: true },
 		birthday: { type: Date, require: true },
 		CI: { type: String, trim: true },
-		email: { type: String, trim: true, require: true, unique: true },
+		email: { type: String, trim: true },
 		gender: { type: String, enum: Gender },
 		address: { type: String, trim: true, require: true },
 		phone_number: [String],
