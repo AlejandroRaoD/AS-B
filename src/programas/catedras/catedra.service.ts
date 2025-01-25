@@ -3,9 +3,7 @@ import { ErrorMsg, moduleItems } from "../../config/messages";
 import { CreateCatedraDto } from "./dto/create-catedra.dto";
 import { QueryCatedraDto } from "./dto/query-catedra.dto";
 import { UpdateCatedraDto } from "./dto/update-catedra.dto";
-import catedraModel, {
-	catedra_from_DB,
-} from "./models/catedra.model";
+import catedraModel, { catedra_from_DB } from "./models/catedra.model";
 
 export const createCatedra_service = async (
 	createCatedraDto: CreateCatedraDto
@@ -22,8 +20,14 @@ export const getCatedras_service = async (
 ): Promise<catedra_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryCatedraDto;
 
+	const formatedQuery = {
+		...query,
+		name: query.name ? new RegExp(`${query.name}`, "i") : new RegExp(``, "i"),
+		// phone_number:[que]
+	};
+
 	const catedras = await catedraModel
-		.find(query)
+		.find(formatedQuery)
 		// .skip(skip)
 		// .limit(limit)
 		.sort("name");

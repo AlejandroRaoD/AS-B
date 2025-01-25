@@ -24,8 +24,14 @@ export const getProgramas_service = async (
 ): Promise<programa_from_DB[]> => {
 	const { skip = 0, limit = 10, ...query } = queryProgramaDto;
 
+	const formatedQuery = {
+		...query,
+		name: query.name ? new RegExp(`${query.name}`, "i") : new RegExp(``, "i"),
+		// phone_number:[que]
+	};
+
 	const programas = await programaModel
-		.find(query)
+		.find(formatedQuery)
 		// .skip(skip)
 		// .limit(limit)
 		.sort("name");
