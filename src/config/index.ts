@@ -1,4 +1,3 @@
-
 import { config } from "dotenv";
 
 config();
@@ -13,3 +12,6 @@ export const MONGODB_URI =
 	process.env.MONGODB_URI ||
 	process.env.MONGODB_URI_TEST ||
 	"mongodb://127.0.0.1/test";
+
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;

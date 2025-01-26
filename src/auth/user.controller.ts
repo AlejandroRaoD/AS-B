@@ -19,7 +19,7 @@ export const signin_user_controller = async (req: Request, res: Response) => {
 		if (!matchPassword) {
 			res.status(401).json({
 				token: null,
-				message: "Invalid Password",
+				message: ErrorMsg.user.errorCredentials,
 				error: true,
 			});
 
@@ -36,7 +36,7 @@ export const signin_user_controller = async (req: Request, res: Response) => {
 		console.log(error);
 		res
 			.status(400)
-			.json({ error: true, message: ErrorMsg.user.notFound });
+			.json({ error: true, message: ErrorMsg.user.errorCredentials });
 	}
 };
 
@@ -46,7 +46,7 @@ export const profile_controller = async (req: Request, res: Response) => {
 	if (!user) {
 		res
 			.status(300)
-			.json({ error: true, message: ErrorMsg.user.notToken });
+			.json({ error: true, message: ErrorMsg.user.errorCredentials });
 		return;
 	}
 	const { _id } = user;
@@ -54,7 +54,7 @@ export const profile_controller = async (req: Request, res: Response) => {
 	try {
 		const user = await get_profile_User_service(_id);
 
-		res.status(200).json({ profile: user });
+		res.status(200).json({ data: user });
 	} catch (error) {
 		console.log(error);
 		res

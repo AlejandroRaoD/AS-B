@@ -3,8 +3,11 @@
 // ****************************************************************************
 
 import { ErrorMsg } from "../config/messages";
-import { employeeAttributes } from "../employee/models/employee.model";
-import userModel, { UserAttributes, User_from_DB } from "./models/user.model";
+import userModel, {
+	UserAttributes,
+	UserLoggedAttributes,
+	User_from_DB,
+} from "./models/user.model";
 
 export const createUser_service = async (
 	data: UserAttributes
@@ -50,17 +53,19 @@ export const get_User_by_email_service = async (
 
 export const get_profile_User_service = async (
 	_id: string
-): Promise<employeeAttributes> => {
+): Promise<UserLoggedAttributes> => {
 	try {
 		const user = await userModel
-			.findById(_id, { employeeId: 1 })
+			.findById(_id)
 			.populate("employeeId");
+
+
+			console.log(user);
+			
 
 		if (!user) throw new Error(ErrorMsg.user.notFound);
 
-		const { employeeId: profile } = user;
-
-		return profile as unknown as employeeAttributes;
+		return user as unknown as UserLoggedAttributes;
 	} catch (error) {
 		console.log(error);
 		throw new Error(ErrorMsg.user.whenObtaining);

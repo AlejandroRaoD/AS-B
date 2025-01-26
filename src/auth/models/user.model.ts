@@ -1,12 +1,21 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { UserPermissions } from "../../config/enums";
+import { employeeAttributes } from "../../employee/models/employee.model";
 
 export interface UserAttributes {
 	_id: string;
 	email: string;
 	password: string;
-	permissions: string[];
+	permissions: UserPermissions[];
 	employeeId: string;
+}
+
+export interface UserLoggedAttributes {
+	_id: string;
+	email: string;
+	permissions: UserPermissions[];
+	employeeId: employeeAttributes;
 }
 
 export interface User_from_DB extends UserAttributes, Document {
@@ -17,7 +26,7 @@ const UserSchema = new mongoose.Schema(
 	{
 		email: { type: String, trim: true, require: true, unique: true },
 		password: { type: String, require: true, default: "" },
-		permissions: [{ type: String }],
+		permissions: [{ type: String, enum: UserPermissions }],
 		employeeId: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Employee",

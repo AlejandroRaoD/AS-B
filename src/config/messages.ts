@@ -35,6 +35,7 @@ export const ErrorMsg = {
 	},
 
 	user: {
+		errorCredentials:"Correo/Contraseña incorrecta",
 		notCreated: "notCreated",
 		notFound: "user not found",
 		notToken: "notToken",
