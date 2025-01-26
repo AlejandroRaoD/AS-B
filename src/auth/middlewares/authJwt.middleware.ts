@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import userByJWT from "../helpers/userByJWT";
-import { get_User_service } from "../user.service";
+import { findToken_service, get_User_service } from "../user.service";
 import { UserPermissions } from "../../config/enums";
+import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
+import { BadRequestException } from "../../common/classes/ErrorWithHttpStatus";
+import { ErrorMsg } from "../../config/messages";
 
 // import User from "../models/User.js";
 // import Role from "../models/Role.js";
@@ -21,13 +24,16 @@ export const verifyToken = async (
 	}
 
 	try {
-		req.user = userByJWT(token);
+		const sesionToken = await findToken_service(token);
 
-		// const user = await User.findById(req.userId, { password: 0 });
-		// if (!user) return res.status(404).json({ message: "No user found" });
+		if (!sesionToken)
+			throw new BadRequestException(ErrorMsg.user.errorCredentials);
+
+		req.user = userByJWT(sesionToken.token);
+		
 		return next();
 	} catch (error) {
-		res.status(401).json({ message: "Unauthorized!" });
+		errorHandlerHelper(error, res);
 	}
 };
 
