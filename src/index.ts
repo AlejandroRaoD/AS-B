@@ -12,7 +12,7 @@ import connectToMongoDB from "./common/db";
 
 	// await new userModel({
 	// 	email: "germancastrov30@gmail.com",
-	// 	password: "123456",
+	// 	password: "12345678",
 	// 	permissions: [],
 	// 	employeeId: "6794241c6a92dd12a9763bb5",
 	// }).save();
