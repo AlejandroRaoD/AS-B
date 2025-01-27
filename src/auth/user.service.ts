@@ -10,42 +10,55 @@ import {
 	SECRET_WORD,
 	adminUserObject,
 } from "../config";
-import { ErrorMsg } from "../config/messages";
+import { ErrorMsg, moduleItems } from "../config/messages";
 import { LoginDto } from "./dto/login.dto";
 import userModel, {
-	UserAttributes,
 	UserLoggedAttributes,
 	User_from_DB,
 } from "./models/user.model";
 import { SesionToken_from_DB } from "./models/sesionToken.model";
 import sesionTokenModel from "./models/sesionToken.model";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
 
 // ****************************************************************************
 // 										             creacion
 // ****************************************************************************
 
 export const createUser_service = async (
-	data: UserAttributes
+	data: CreateUserDto
 ): Promise<User_from_DB> => {
+	const { email } = data;
+
+	let oldUser = null;
 	try {
-		const user = new userModel(data);
+		oldUser = await get_User_by_email_service(email);
+	} catch (error) {}
 
-		await user.save();
+	if (oldUser)
+		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.user));
 
-		return user;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.user.notCreated);
-	}
+	const user = new userModel(data);
+
+	await user.save();
+
+	user.password = "";
+
+	return user;
 };
 
 // ****************************************************************************
 // 										             getters
 // ****************************************************************************
 
-export const get_User_service = async (_id: string): Promise<User_from_DB> => {
-	const user = await userModel.findById(_id);
+export const get_Users_service = async (): Promise<User_from_DB[]> => {
+	const user = await userModel.find(null, { password: 0 }).sort("email");
 
+	return user;
+};
+
+export const get_User_service = async (id: string): Promise<User_from_DB> => {
+	const user = await userModel.findById(id, { password: 0 });
 	if (!user) throw new Error(ErrorMsg.user.notFound);
 
 	return user;
@@ -54,43 +67,31 @@ export const get_User_service = async (_id: string): Promise<User_from_DB> => {
 export const get_User_by_email_service = async (
 	email: string
 ): Promise<User_from_DB | UserLoggedAttributes> => {
-	try {
-		const user =
-			email == ADMIN_EMAIL
-				? adminUserObject
-				: await userModel.findOne({ email });
+	const user =
+		email == ADMIN_EMAIL ? adminUserObject : await userModel.findOne({ email });
 
-		if (!user) throw new Error(ErrorMsg.user.notFound);
+	if (!user) throw new NotFoundException(ErrorMsg.notFound(moduleItems.user));
 
-		return user;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.user.notFound);
-	}
+	return user;
 };
 
 export const get_profile_User_service = async (
 	id: string
 ): Promise<UserLoggedAttributes> => {
-	try {
-		let adminUser = id == "0" ? adminUserObject : null;
-		let dbUser = null;
+	let adminUser = id == "0" ? adminUserObject : null;
+	let dbUser = null;
 
-		if (!adminUser) {
-			dbUser = (await userModel.findById(id).populate("employeeId")).toJSON();
+	if (!adminUser) {
+		dbUser = (await userModel.findById(id).populate("employeeId")).toJSON();
 
-			delete dbUser.password;
-		}
-
-		const user = adminUser || dbUser;
-
-		if (!user) throw new Error(ErrorMsg.user.notFound);
-
-		return user as unknown as UserLoggedAttributes;
-	} catch (error) {
-		console.log(error);
-		throw new Error(ErrorMsg.user.whenObtaining);
+		delete dbUser.password;
 	}
+
+	const user = adminUser || dbUser;
+
+	if (!user) throw new NotFoundException(ErrorMsg.notFound(moduleItems.user));
+
+	return user as unknown as UserLoggedAttributes;
 };
 
 export const verifyCredentials_service = async (loginDto: LoginDto) => {
@@ -128,4 +129,28 @@ export const findToken_service = async (
 		throw new BadRequestException(ErrorMsg.user.errorCredentials);
 
 	return sesionToken;
+};
+
+// ****************************************************************************
+// 										             update
+// ****************************************************************************
+
+export const updateUser_service = async (
+	id: string,
+	data: UpdateUserDto
+): Promise<User_from_DB> => {
+	const { email } = data;
+
+	const oldUser = await get_User_by_email_service(email);
+
+	if (oldUser._id != id)
+		throw new BadRequestException(ErrorMsg.alreadyExist(moduleItems.user));
+
+	const user = await userModel.findByIdAndUpdate(id, data, { new: true });
+
+	return user;
+};
+
+export const deleteUser_service = async (id: string) => {
+	await userModel.deleteOne({ _id: id });
 };

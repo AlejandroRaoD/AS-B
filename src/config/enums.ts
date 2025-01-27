@@ -18,6 +18,3 @@ export enum UserRoles {
 	admin = "admin",
 }
 
-export enum UserPermissions {
-	edit = "edit",
-}

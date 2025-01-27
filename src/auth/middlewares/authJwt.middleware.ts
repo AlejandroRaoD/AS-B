@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import userByJWT from "../helpers/userByJWT";
 import { findToken_service, get_User_service } from "../user.service";
-import { UserPermissions } from "../../config/enums";
 import { errorHandlerHelper } from "../../common/helpers/errorHandler.helper";
 import { BadRequestException } from "../../common/classes/ErrorWithHttpStatus";
 import { ErrorMsg } from "../../config/messages";
+import { UserPermissions } from "../models/user.model";
 
 // import User from "../models/User.js";
 // import Role from "../models/Role.js";

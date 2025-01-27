@@ -1,6 +1,5 @@
 import { config } from "dotenv";
-import { UserLoggedAttributes } from "../auth/models/user.model";
-import { UserPermissions } from "./enums";
+import { UserLoggedAttributes, UserPermissions } from "../auth/models/user.model";
 
 config();
 

@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { UserPermissions } from "../../config/enums";
 import { employeeAttributes } from "../../employee/models/employee.model";
+
+export enum UserPermissions {
+	edit = "editar",
+	users = "vista de usuarios",
+	logs = "registros de actividades",
+}
 
 export interface UserAttributes {
 	_id: string;
