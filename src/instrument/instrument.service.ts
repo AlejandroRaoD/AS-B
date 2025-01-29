@@ -62,9 +62,6 @@ export const updateInstrument_service = async (
 	return instrument;
 };
 
-export const deleteInstrument_service = async (_id: string): Promise<void> => {
-	const result = await instrumentModel.deleteOne({ _id });
-
-	if (!result.deletedCount)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.instrument));
+export const deleteInstrument_service = async (_id: string) => {
+	return await instrumentModel.findByIdAndDelete(_id);
 };

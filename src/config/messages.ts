@@ -12,7 +12,7 @@ export enum moduleItems {
 	furniture = "inventario",
 	instrument = "intrumento",
 	comodato = "comodato",
-	enrollmentPeriod = "perioodo de inscripcion",
+	enrollmentPeriod = "periodo de inscripcion",
 	studentEnrollment = "inscripcion de estudiante",
 }
 

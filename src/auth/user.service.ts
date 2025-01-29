@@ -25,9 +25,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 // 										             creacion
 // ****************************************************************************
 
-export const createUser_service = async (
-	data: CreateUserDto
-): Promise<User_from_DB> => {
+export const createUser_service = async (data: CreateUserDto) => {
 	const { email } = data;
 
 	let oldUser = null;
@@ -57,8 +55,14 @@ export const get_Users_service = async (): Promise<User_from_DB[]> => {
 	return user;
 };
 
-export const get_User_service = async (id: string): Promise<User_from_DB> => {
-	const user = await userModel.findById(id, { password: 0 });
+export const get_User_service = async (
+	id: string
+): Promise<User_from_DB | UserLoggedAttributes> => {
+	const user =
+		id == adminUserObject._id
+			? adminUserObject
+			: await userModel.findById(id, { password: 0 });
+
 	if (!user) throw new Error(ErrorMsg.user.notFound);
 
 	return user;
@@ -78,7 +82,7 @@ export const get_User_by_email_service = async (
 export const get_profile_User_service = async (
 	id: string
 ): Promise<UserLoggedAttributes> => {
-	let adminUser = id == "0" ? adminUserObject : null;
+	let adminUser = id == adminUserObject._id ? adminUserObject : null;
 	let dbUser = null;
 
 	if (!adminUser) {
@@ -152,5 +156,5 @@ export const updateUser_service = async (
 };
 
 export const deleteUser_service = async (id: string) => {
-	await userModel.deleteOne({ _id: id });
+	return await userModel.findByIdAndDelete(id);
 };

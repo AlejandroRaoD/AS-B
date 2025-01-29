@@ -11,6 +11,9 @@ import { matchedData } from "express-validator";
 import { CreateComodatoDto } from "./dto/create-comodato.dto";
 import { QueryComodatoDto } from "./dto/query-comodato.dto";
 import { UpdateComodatoDto } from "./dto/update-comodato.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
 
 export const createComodato_controller = async (
 	req: Request,
@@ -20,6 +23,15 @@ export const createComodato_controller = async (
 
 	try {
 		const comodato = await createComodato_service(data);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.comodato,
+			itemId: comodato._id.toString(),
+			text: comodato.instrumentId,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.status(201).json({ data: comodato });
 	} catch (error) {
@@ -64,6 +76,15 @@ export const updateComodato_controller = async (
 
 		const comodato = await updateComodato_service(id, data);
 
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.comodato,
+			itemId: comodato._id.toString(),
+			text: comodato.instrumentId,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
+
 		res.json({ data: comodato });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -77,7 +98,16 @@ export const deleteComodato_controller = async (
 	try {
 		const { id } = req.params;
 
-		await deleteComodato_service(id);
+		const comodato = await deleteComodato_service(id);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.comodato,
+			itemId: comodato._id.toString(),
+			text: comodato.instrumentId,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.json({ data: "ok" });
 	} catch (error) {

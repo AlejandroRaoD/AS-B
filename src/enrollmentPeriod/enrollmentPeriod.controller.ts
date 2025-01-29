@@ -11,6 +11,9 @@ import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 import { CreateEnrollmentPeriodDto } from "./dtos/create-enrollment-perid.dto";
 import { QueryEnrollmentPeriodDto } from "./dtos/query-enrollment-perid.dto";
 import { UpdateEnrollmentPeriodDto } from "./dtos/update-enrollment-perid.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
 
 export const createEnrollmentPeriod_controller = async (
 	req: Request,
@@ -20,6 +23,15 @@ export const createEnrollmentPeriod_controller = async (
 
 	try {
 		const enrollmentPeriod = await createEnrollmentPeriod_service(data);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.enrollmentPeriod,
+			itemId: enrollmentPeriod._id.toString(),
+			text: enrollmentPeriod.year + "-" + enrollmentPeriod.step,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.status(201).json({ data: enrollmentPeriod });
 	} catch (error) {
@@ -66,7 +78,14 @@ export const updateEnrollmentPeriod_controller = async (
 		const data = matchedData(req) as UpdateEnrollmentPeriodDto;
 
 		const enrollmentPeriod = await updateEnrollmentPeriod_service(id, data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.enrollmentPeriod,
+			itemId: enrollmentPeriod._id.toString(),
+			text: enrollmentPeriod.year + "-" + enrollmentPeriod.step,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: enrollmentPeriod });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -79,9 +98,16 @@ export const deleteEnrollmentPeriod_controller = async (
 ) => {
 	try {
 		const { id } = req.params;
+		const enrollmentPeriod = await deleteEnrollmentPeriod_service(id);
 
-		await deleteEnrollmentPeriod_service(id);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.enrollmentPeriod,
+			itemId: enrollmentPeriod._id.toString(),
+			text: enrollmentPeriod.year + "-" + enrollmentPeriod.step,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ ok: true });
 	} catch (error) {
 		errorHandlerHelper(error, res);

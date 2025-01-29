@@ -53,11 +53,6 @@ export const updateEmployee_service = async (
 	return employee;
 };
 
-export const deleteEmployee_service = async (_id: string): Promise<void> => {
-	const result = await employeeModel.deleteOne({ _id });
-
-	console.log(result);
-
-	if (!result.deletedCount)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.employee));
+export const deleteEmployee_service = async (_id: string) => {
+	return await employeeModel.findByIdAndDelete(_id);
 };

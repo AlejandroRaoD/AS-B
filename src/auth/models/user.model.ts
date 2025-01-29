@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import bcrypt from "bcrypt";
 import { employeeAttributes } from "../../employee/models/employee.model";
 
-
 export enum UserPermissions {
-	estadisticas = "Ver estadisticas",
+	// estadisticas = "Ver estadisticas",
 	// estadisticasEdit = "Editar estadisticas",
 	personal = "Ver personal",
 	personalEdit = "Editar personal",
@@ -33,8 +32,7 @@ export enum UserPermissions {
 	users = "vista de usuarios",
 	usersEdit = "Editar de usuarios",
 	documentos = "documentos",
-	documentosEdit = "Editar",
-	edit = "editar",
+	// documentosEdit = "Editar documentos",
 	logs = "registros de actividades",
 }
 
@@ -53,7 +51,8 @@ export interface UserLoggedAttributes {
 	employeeId: employeeAttributes;
 }
 
-export interface User_from_DB extends UserAttributes, Document {
+export interface User_from_DB extends Omit<UserAttributes, "_id">, Document {
+	_id: mongoose.Schema.Types.ObjectId;
 	comparePassword(passwordReceived: string): Promise<boolean>;
 }
 

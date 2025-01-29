@@ -16,7 +16,9 @@ export interface catedraAttributes {
 
 export interface catedra_from_DB
 	extends Omit<catedraAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const CatedraSchema = new mongoose.Schema(
 	{

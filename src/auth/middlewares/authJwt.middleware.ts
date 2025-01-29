@@ -29,8 +29,10 @@ export const verifyToken = async (
 		if (!sesionToken)
 			throw new BadRequestException(ErrorMsg.user.errorCredentials);
 
-		req.user = userByJWT(sesionToken.token);
-		
+		const { _id } = userByJWT(sesionToken.token);
+
+		req.user = await get_User_service(_id);
+
 		return next();
 	} catch (error) {
 		errorHandlerHelper(error, res);

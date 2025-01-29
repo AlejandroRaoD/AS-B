@@ -11,6 +11,9 @@ import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { matchedData } from "express-validator";
 import { QueryEmployeeDto } from "./dto/query-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
 
 export const createEmployee_controller = async (
 	req: Request,
@@ -20,6 +23,15 @@ export const createEmployee_controller = async (
 
 	try {
 		const employee = await createEmployee_service(data);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.employee,
+			itemId: employee._id.toString(),
+			text: employee.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.status(201).json({ data: employee });
 	} catch (error) {
@@ -64,6 +76,15 @@ export const updateEmployee_controller = async (
 
 		const employee = await updateEmployee_service(_id, data);
 
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.employee,
+			itemId: employee._id.toString(),
+			text: employee.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
+
 		res.json({ data: employee });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -77,7 +98,16 @@ export const deleteEmployee_controller = async (
 	try {
 		const { id } = req.params;
 
-		await deleteEmployee_service(id);
+		const employee = await deleteEmployee_service(id);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.employee,
+			itemId: employee._id.toString(),
+			text: employee.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.json({ data: "ok" });
 	} catch (error) {

@@ -67,7 +67,11 @@ export const existOtherNucleo_service = async (
 	try {
 		let exist = await getOneNucleo_service(term);
 
-		return compareId ? (exist._id != compareId ? true : false) : true;
+		return compareId
+			? exist._id.toString() != compareId
+				? true
+				: false
+			: true;
 	} catch (error) {}
 
 	return false;
@@ -92,11 +96,11 @@ export const updateNucleo_service = async (
 	return nucleo;
 };
 
-export const deleteNucleo_service = async (id: string): Promise<void> => {
+export const deleteNucleo_service = async (id: string) => {
 	const hasSedes = await getSedes_service({ nucleoId: id, skip: 0, limit: 1 });
 
 	if (hasSedes.length)
 		throw new BadRequestException(ErrorMsg.hasDependencies(moduleItems.nucleo));
 
-	await nucleoModel.findOneAndDelete({ _id: id });
+	return await nucleoModel.findByIdAndDelete({ _id: id });
 };

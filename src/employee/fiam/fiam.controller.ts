@@ -11,13 +11,23 @@ import { CreateFiamDto } from "./dto/create-fiam.dto";
 import { matchedData } from "express-validator";
 import { QueryFiamDto } from "./dto/query-fiam.dto";
 import { UpdateFiamDto } from "./dto/update-fiam.dto";
+import { createSystemLog_service } from "../../systemLog/systemLog.service";
+import { SystemAction } from "../../systemLog/models/systemLog.model";
+import { moduleItems } from "../../config/messages";
 
 export const createFiam_controller = async (req: Request, res: Response) => {
 	const data = matchedData(req) as CreateFiamDto;
 
 	try {
 		const fiam = await createFiam_service(data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.fiam,
+			itemId: fiam._id.toString(),
+			// text: fiam.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.status(201).json({ data: fiam });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -54,7 +64,14 @@ export const updateFiam_controller = async (req: Request, res: Response) => {
 		const data = matchedData(req) as UpdateFiamDto;
 
 		const fiam = await updateFiam_service(id, data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.fiam,
+			itemId: fiam._id.toString(),
+			// text: employee.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: fiam });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -65,8 +82,16 @@ export const deleteFiam_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
 
-		await deleteFiam_service(id);
+		const fiam = await deleteFiam_service(id);
 
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.fiam,
+			itemId: fiam._id.toString(),
+			// text: employee.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);

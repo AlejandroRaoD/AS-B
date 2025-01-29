@@ -18,7 +18,9 @@ export interface instrumentAttributes {
 
 export interface instrument_from_DB
 	extends Omit<instrumentAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const InstrumentSchema = new mongoose.Schema(
 	{

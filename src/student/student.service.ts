@@ -77,8 +77,8 @@ export const updateStudent_service = async (
 	return student;
 };
 
-export const deleteStudent_service = async (id: string): Promise<void> => {
-	await studentModel.deleteOne({ _id: id });
+export const deleteStudent_service = async (id: string) => {
+	return await studentModel.findByIdAndDelete(id);
 };
 
 // relacionar con representante
@@ -124,8 +124,6 @@ export const updateStudentRelation_service = async (
 	return relation;
 };
 
-export const deleteStudentRelation_service = async (
-	id: string
-): Promise<void> => {
-	await studentRelationModel.deleteOne({ _id: id });
+export const deleteStudentRelation_service = async (id: string) => {
+	return await studentRelationModel.findByIdAndDelete(id);
 };

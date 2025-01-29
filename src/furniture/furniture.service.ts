@@ -50,9 +50,6 @@ export const updateFurniture_service = async (
 	return furniture;
 };
 
-export const deleteFurniture_service = async (_id: string): Promise<void> => {
-	const result = await furnitureModel.deleteOne({ _id });
-
-	if (!result.deletedCount)
-		throw new Error(ErrorMsg.notFound(moduleItems.furniture));
+export const deleteFurniture_service = async (_id: string) => {
+	return await furnitureModel.findByIdAndDelete(_id);
 };

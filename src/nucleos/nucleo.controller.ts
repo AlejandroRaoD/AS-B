@@ -10,13 +10,23 @@ import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 import { matchedData } from "express-validator";
 import { nucleoAttributes } from "./models/nucleo.model";
 import { QueryNucleoDto } from "./dto/query-nucleo.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
 
 export const createNucleo_controller = async (req: Request, res: Response) => {
 	try {
 		const data = matchedData(req) as Omit<nucleoAttributes, "_id" | "status">;
 
 		const nucleo = await createNucleo_service(data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.nucleo,
+			itemId: nucleo._id.toString(),
+			text: nucleo.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.status(201).json({ data: nucleo });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -53,7 +63,14 @@ export const updateNucleo_controller = async (req: Request, res: Response) => {
 		const data = matchedData(req) as Omit<nucleoAttributes, "_id" | "status">;
 
 		const nucleo = await updateNucleo_service(id, data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.nucleo,
+			itemId: nucleo._id.toString(),
+			text: nucleo.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: nucleo });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -65,8 +82,15 @@ export const deleteNucleo_controller = async (req: Request, res: Response) => {
 		const { id } = req.params;
 
 		// const nucleo =
-		 await deleteNucleo_service(id);
-
+		const nucleo = await deleteNucleo_service(id);
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.nucleo,
+			itemId: nucleo._id.toString(),
+			text: nucleo.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);

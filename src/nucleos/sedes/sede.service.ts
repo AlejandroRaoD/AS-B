@@ -54,7 +54,7 @@ export const updateSede_service = async (
 	return sede;
 };
 
-export const deleteSede_service = async (id: string): Promise<void> => {
+export const deleteSede_service = async (id: string) => {
 	// todo: que no se pueda marcar como eliminado si tiene referencias
-	await sedeModel.findOneAndDelete({ _id: id });
+	return await sedeModel.findByIdAndUpdate(id);
 };

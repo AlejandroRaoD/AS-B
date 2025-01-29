@@ -58,13 +58,6 @@ export const updateStudentEnrollment_service = async (
 	return studentEnrollment;
 };
 
-export const deleteStudentEnrollment_service = async (
-	_id: string
-): Promise<void> => {
-	const result = await studentEnrollmentModel.deleteOne({ _id });
-
-	if (!result.deletedCount)
-		throw new NotFoundException(
-			ErrorMsg.notFound(moduleItems.studentEnrollment)
-		);
+export const deleteStudentEnrollment_service = async (_id: string) => {
+	return await studentEnrollmentModel.findByIdAndDelete(_id);
 };

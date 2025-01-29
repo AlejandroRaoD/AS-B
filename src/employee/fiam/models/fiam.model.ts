@@ -16,7 +16,9 @@ export interface fiamAttributes {
 	type: FiamTypes;
 }
 
-export interface fiam_from_DB extends Omit<fiamAttributes, "_id">, Document {}
+export interface fiam_from_DB extends Omit<fiamAttributes, "_id">, Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const FiamSchema = new mongoose.Schema(
 	{

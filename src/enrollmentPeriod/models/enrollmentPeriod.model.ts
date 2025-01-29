@@ -15,7 +15,9 @@ export interface enrollmentPeriodAttributes {
 
 export interface enrollmentPeriod_from_DB
 	extends Omit<enrollmentPeriodAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const EnrollmentPeriodSchema = new mongoose.Schema(
 	{

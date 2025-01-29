@@ -11,6 +11,9 @@ import { matchedData } from "express-validator";
 import { CreateRepresentativeDto } from "./dto/create-representative.dto";
 import { QueryRepresentativeDto } from "./dto/query-representative.dto";
 import { UpdateRepresentativeDto } from "./dto/update-student.dto";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
 
 export const createRepresentative_controller = async (
 	req: Request,
@@ -20,6 +23,15 @@ export const createRepresentative_controller = async (
 
 	try {
 		const representative = await createRepresentative_service(data);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.representative,
+			itemId: representative._id.toString(),
+			text: representative.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.status(201).json({ data: representative });
 	} catch (error) {
@@ -67,6 +79,15 @@ export const updateRepresentative_controller = async (
 
 		const representative = await updateRepresentative_service(id, data);
 
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.representative,
+			itemId: representative._id.toString(),
+			text: representative.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
+
 		res.json({ data: representative });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -80,7 +101,16 @@ export const deleteRepresentative_controller = async (
 	try {
 		const { id } = req.params;
 
-		await deleteRepresentative_service(id);
+		const representative = await deleteRepresentative_service(id);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.representative,
+			itemId: representative._id.toString(),
+			text: representative.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.json({ data: "ok" });
 	} catch (error) {

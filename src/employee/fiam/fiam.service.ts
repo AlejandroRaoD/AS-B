@@ -44,9 +44,6 @@ export const updateFiam_service = async (
 	return fiam;
 };
 
-export const deleteFiam_service = async (id: string): Promise<void> => {
-	const result = await fiamModel.deleteOne({ _id: id });
-
-	if (!result.deletedCount)
-		throw new Error(ErrorMsg.notFound(moduleItems.fiam));
+export const deleteFiam_service = async (id: string) => {
+	return await fiamModel.findByIdAndDelete(id);
 };

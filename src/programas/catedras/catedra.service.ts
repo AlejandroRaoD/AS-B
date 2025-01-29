@@ -62,6 +62,6 @@ export const updateCatedra_service = async (
 	return catedra;
 };
 
-export const deleteCatedra_service = async (id: string): Promise<void> => {
-	await catedraModel.deleteOne({ _id: id });
+export const deleteCatedra_service = async (id: string) => {
+	return await catedraModel.findByIdAndDelete(id);
 };

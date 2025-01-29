@@ -16,7 +16,9 @@ export interface sedeAttributes {
 	status: string;
 }
 
-export interface sede_from_DB extends Omit<sedeAttributes, "_id">, Document {}
+export interface sede_from_DB extends Omit<sedeAttributes, "_id">, Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const SedeSchema = new mongoose.Schema(
 	{

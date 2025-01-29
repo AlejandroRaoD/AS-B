@@ -20,7 +20,8 @@ export interface furnitureAttributes {
 
 export interface furniture_from_DB
 	extends Omit<furnitureAttributes, "_id">,
-		Document {}
+		Document {	_id: mongoose.Schema.Types.ObjectId;
+		}
 
 const FurnitureSchema = new mongoose.Schema(
 	{

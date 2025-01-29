@@ -72,15 +72,7 @@ export const updateEnrollmentPeriod_service = async (
 	return enrollmentPeriod;
 };
 
-export const deleteEnrollmentPeriod_service = async (
-	id: string
-): Promise<void> => {
+export const deleteEnrollmentPeriod_service = async (id: string) => {
 	// todo: que no se elimine si ya hay inscripciones
-
-	const result = await enrollmentPeriodModel.deleteOne({ _id: id });
-
-	if (!result.deletedCount)
-		throw new NotFoundException(
-			ErrorMsg.notFound(moduleItems.enrollmentPeriod)
-		);
+	return await enrollmentPeriodModel.findByIdAndDelete(id);
 };

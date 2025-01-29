@@ -11,6 +11,9 @@ import { matchedData } from "express-validator";
 import { CreateProgramaDto } from "./dto/create-programa.dto";
 import { QueryProgramaDto } from "./dto/query-programa.dto";
 import { UpdateProgramaDto } from "./dto/update-programa.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
 
 export const createPrograma_controller = async (
 	req: Request,
@@ -19,7 +22,14 @@ export const createPrograma_controller = async (
 	try {
 		const data = matchedData(req) as CreateProgramaDto;
 		const programa = await createPrograma_service(data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.programa,
+			itemId: programa._id.toString(),
+			text: programa.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.status(201).json({ data: programa });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -62,7 +72,14 @@ export const updatePrograma_controller = async (
 		const data = matchedData(req.body) as UpdateProgramaDto;
 
 		const programa = await updatePrograma_service(id, data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.programa,
+			itemId: programa._id.toString(),
+			text: programa.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: programa });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -76,7 +93,16 @@ export const deletePrograma_controller = async (
 	try {
 		const { id } = req.params;
 
-		await deletePrograma_service(id);
+		const programa = await deletePrograma_service(id);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.programa,
+			itemId: programa._id.toString(),
+			text: programa.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.json({ data: "ok" });
 	} catch (error) {

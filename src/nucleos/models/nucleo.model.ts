@@ -13,7 +13,9 @@ export interface nucleoAttributes {
 
 export interface nucleo_from_DB
 	extends Omit<nucleoAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const NucleoSchema = new mongoose.Schema(
 	{

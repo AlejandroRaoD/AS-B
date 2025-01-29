@@ -18,7 +18,9 @@ export interface representativeAttributes {
 
 export interface representative_from_DB
 	extends Omit<representativeAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const RepresentativeSchema = new mongoose.Schema(
 	{

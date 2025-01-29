@@ -25,7 +25,9 @@ export interface studentAttributes {
 
 export interface student_from_DB
 	extends Omit<studentAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const StudentSchema = new mongoose.Schema(
 	{

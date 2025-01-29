@@ -17,7 +17,9 @@ export interface programaAttributes {
 
 export interface programa_from_DB
 	extends Omit<programaAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const ProgramaSchema = new mongoose.Schema(
 	{

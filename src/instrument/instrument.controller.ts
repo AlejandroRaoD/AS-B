@@ -11,6 +11,9 @@ import { CreateInstrumentDto } from "./dto/create-instrument.dto";
 import { matchedData } from "express-validator";
 import { QueryInstrumentDto } from "./dto/query-instrument.dto";
 import { UpdateInstrumentDto } from "./dto/update-instrument.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
+import { moduleItems } from "../config/messages";
 
 export const createInstrument_controller = async (
 	req: Request,
@@ -20,7 +23,14 @@ export const createInstrument_controller = async (
 
 	try {
 		const instrument = await createInstrument_service(data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.instrument,
+			itemId: instrument._id.toString(),
+			text: instrument.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.status(201).json({ data: instrument });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -67,7 +77,14 @@ export const updateInstrument_controller = async (
 		const data = matchedData(req) as UpdateInstrumentDto;
 
 		const instrument = await updateInstrument_service(_id, data);
-
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.instrument,
+			itemId: instrument._id.toString(),
+			text: instrument.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: instrument });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -81,8 +98,15 @@ export const deleteInstrument_controller = async (
 	try {
 		const { id } = req.params;
 
-		await deleteInstrument_service(id);
-
+		const instrument = await deleteInstrument_service(id);
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.instrument,
+			itemId: instrument._id.toString(),
+			text: instrument.name,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 		res.json({ data: "ok" });
 	} catch (error) {
 		errorHandlerHelper(error, res);

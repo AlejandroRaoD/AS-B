@@ -14,23 +14,26 @@ import instrumentRoutes from "./instrument/routes/instrument.routes";
 import comodatoRoutes from "./comodato/routes/comodato.routes";
 import enrollmentPeriodRoutes from "./enrollmentPeriod/routes/enrollmentPeriod.routes";
 import studentEnrollmentRoutes from "./studentEnrollment/routes/studentEnrollment.routes";
+import systemLogRoutes from "./systemLog/routes/systemLog.routes";
+import { verifyToken } from "./auth/middlewares/authJwt.middleware";
 
 const allRouters = Router();
 
 allRouters.use("/api/user", userRoutes);
-allRouters.use("/api/employee", employeeRoutes);
-allRouters.use("/api/nucleo", nucleoRoutes);
-allRouters.use("/api/sede", sedeRoutes);
-allRouters.use("/api/programa", programaRoutes);
-allRouters.use("/api/catedra", catedraRoutes);
-allRouters.use("/api/fiam", fiamRoutes);
-allRouters.use("/api/student", studentRoutes);
-allRouters.use("/api/representative", representativeRoutes);
-allRouters.use("/api/furniture", furnitureRoutes);
-allRouters.use("/api/instrument", instrumentRoutes);
-allRouters.use("/api/comodato", comodatoRoutes);
-allRouters.use("/api/enrollment_period", enrollmentPeriodRoutes);
-allRouters.use("/api/student_enrollment", studentEnrollmentRoutes);
+allRouters.use("/api/employee", verifyToken, employeeRoutes);
+allRouters.use("/api/nucleo", verifyToken, nucleoRoutes);
+allRouters.use("/api/sede", verifyToken, sedeRoutes);
+allRouters.use("/api/programa", verifyToken, programaRoutes);
+allRouters.use("/api/catedra", verifyToken, catedraRoutes);
+allRouters.use("/api/fiam", verifyToken, fiamRoutes);
+allRouters.use("/api/student", verifyToken, studentRoutes);
+allRouters.use("/api/representative", verifyToken, representativeRoutes);
+allRouters.use("/api/furniture", verifyToken, furnitureRoutes);
+allRouters.use("/api/instrument", verifyToken, instrumentRoutes);
+allRouters.use("/api/comodato", verifyToken, comodatoRoutes);
+allRouters.use("/api/enrollment_period", verifyToken, enrollmentPeriodRoutes);
+allRouters.use("/api/student_enrollment", verifyToken, studentEnrollmentRoutes);
+allRouters.use("/api/system_log", verifyToken, systemLogRoutes);
 
 allRouters.use(defaultRoutes);
 

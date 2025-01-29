@@ -50,9 +50,6 @@ export const updateComodato_service = async (
 	return comodato;
 };
 
-export const deleteComodato_service = async (_id: string): Promise<void> => {
-	const result = await comodatoModel.deleteOne({ _id });
-
-	if (!result.deletedCount)
-		throw new NotFoundException(ErrorMsg.notFound(moduleItems.comodato));
+export const deleteComodato_service = async (_id: string) => {
+	return await comodatoModel.findByIdAndDelete(_id);
 };

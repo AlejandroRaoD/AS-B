@@ -66,7 +66,7 @@ export const updatePrograma_service = async (
 	return programa;
 };
 
-export const deletePrograma_service = async (id: string): Promise<void> => {
+export const deletePrograma_service = async (id: string) => {
 	const hasCatedras = await getCatedras_service({
 		programaId: id,
 		skip: 0,
@@ -78,5 +78,5 @@ export const deletePrograma_service = async (id: string): Promise<void> => {
 			ErrorMsg.hasDependencies(moduleItems.programa)
 		);
 
-	await programaModel.deleteOne({ _id: id });
+	return await programaModel.findByIdAndDelete(id);
 };

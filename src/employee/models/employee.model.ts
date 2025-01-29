@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { BusinessPosition, Gender } from "../../config/enums";
 import { Nationality } from "../../common/interfaces/nationality.enum";
 
@@ -19,7 +19,9 @@ export interface employeeAttributes {
 
 export interface employee_from_DB
 	extends Omit<employeeAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const EmployeeSchema = new mongoose.Schema(
 	{

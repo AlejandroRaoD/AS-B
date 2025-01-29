@@ -9,7 +9,9 @@ export interface studentRelationAttributes {
 
 export interface studentRelation_from_DB
 	extends Omit<studentRelationAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const StudentRelationSchema = new mongoose.Schema(
 	{

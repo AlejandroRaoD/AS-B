@@ -56,8 +56,6 @@ export const updateRepresentative_service = async (
 	return representative;
 };
 
-export const deleteRepresentative_service = async (
-	_id: string
-): Promise<void> => {
-	await representativeModel.deleteOne({ _id });
+export const deleteRepresentative_service = async (_id: string) => {
+	return await representativeModel.findByIdAndDelete(_id);
 };

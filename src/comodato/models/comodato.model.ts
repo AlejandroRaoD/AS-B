@@ -17,7 +17,9 @@ export interface ComodatoAttributes {
 
 export interface comodato_from_DB
 	extends Omit<ComodatoAttributes, "_id">,
-		Document {}
+		Document {
+	_id: mongoose.Schema.Types.ObjectId;
+}
 
 const ComodatoSchema = new mongoose.Schema(
 	{

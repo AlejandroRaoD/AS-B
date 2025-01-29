@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import {
 	createUser_service,
 	deleteUser_service,
+	get_User_by_email_service,
 	get_User_service,
 	get_Users_service,
 	get_profile_User_service,
@@ -10,18 +11,29 @@ import {
 	verifyCredentials_service,
 } from "./user.service";
 
-import { ErrorMsg } from "../config/messages";
+import { ErrorMsg, moduleItems } from "../config/messages";
 import { errorHandlerHelper } from "../common/helpers/errorHandler.helper";
 import { BadRequestException } from "../common/classes/ErrorWithHttpStatus";
 import { matchedData } from "express-validator";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { createSystemLog_service } from "../systemLog/systemLog.service";
+import { SystemAction } from "../systemLog/models/systemLog.model";
 
 export const createUser_controller = async (req: Request, res: Response) => {
 	try {
 		const createUserDto = matchedData(req) as CreateUserDto;
 
 		const user = await createUser_service(createUserDto);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.create,
+			moduleItem: moduleItems.user,
+			itemId: user._id.toString(),
+			text: user.email,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.status(200).json({ data: user });
 	} catch (error) {
@@ -55,7 +67,18 @@ export const signin_user_controller = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 
 	try {
+		const user = await get_User_by_email_service(email);
+
 		const token = await verifyCredentials_service({ email, password });
+
+		await createSystemLog_service({
+			systemAction: SystemAction.login,
+			moduleItem: moduleItems.user,
+			// itemId: user._id,
+			// text: user.email,
+			userId: user._id.toString(),
+			userEmail: email,
+		});
 
 		res.status(200).json({ token });
 	} catch (error) {
@@ -85,6 +108,15 @@ export const updateUser_controller = async (req: Request, res: Response) => {
 
 		const user = await updateUser_service(id, updateUserDto);
 
+		await createSystemLog_service({
+			systemAction: SystemAction.update,
+			moduleItem: moduleItems.user,
+			itemId: user._id.toString(),
+			text: user.email,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
+
 		res.status(200).json({ data: user });
 	} catch (error) {
 		errorHandlerHelper(error, res);
@@ -95,7 +127,16 @@ export const deleteUser_controller = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params;
 
-		await deleteUser_service(id);
+		const user = await deleteUser_service(id);
+
+		await createSystemLog_service({
+			systemAction: SystemAction.delete,
+			moduleItem: moduleItems.user,
+			itemId: user._id.toString(),
+			text: user.email,
+			userId: req.user._id,
+			userEmail: req.user.email,
+		});
 
 		res.status(200).json({ data: "ok" });
 	} catch (error) {

@@ -1,5 +1,8 @@
 import { config } from "dotenv";
-import { UserLoggedAttributes, UserPermissions } from "../auth/models/user.model";
+import {
+	UserLoggedAttributes,
+	UserPermissions,
+} from "../auth/models/user.model";
 
 config();
 
@@ -18,7 +21,7 @@ export const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 export const adminUserObject: UserLoggedAttributes = {
-	_id: "0",
+	_id: "00000000000000000000000",
 	email: ADMIN_EMAIL,
 	permissions: Object.values(UserPermissions),
 	employeeId: null,
